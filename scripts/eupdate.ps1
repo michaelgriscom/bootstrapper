@@ -146,7 +146,7 @@ else
 }
 
 # fix emacs.d/server identity for the hell of it (could be broken on some machines)
-$serverpath = $env:USERPROFILE/.emacs.d/server
+$serverpath = "$env:USERPROFILE/.emacs.d/server"
 if (Test-Path serverpath)
 {
     $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
