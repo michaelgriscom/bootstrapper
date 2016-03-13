@@ -27,6 +27,18 @@ if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
         git clone git@github.com:mjlim/.spacemacs.d.git
         popd
     }
+
+    if (Test-path $env:USERPROFILE/.emacs.d/)
+    {
+        echo ".emacs.d exists (spacemacs is installed)"
+    }
+    else
+    {
+        echo ".emacs.d doesn't exist, cloning spacemacs."
+        pushd $env:USERPROFILE
+        git clone https://github.com/syl20bnr/spacemacs .emacs.d
+        popd
+    }
 }
 else
 {
@@ -83,7 +95,6 @@ else
     [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\bin\", "Machine")
 }
 
-# todo get pt 
 if (Get-Command "pt.exe" -ErrorAction SilentlyContinue)
 {
     echo "This machine has pt.exe in the path"
