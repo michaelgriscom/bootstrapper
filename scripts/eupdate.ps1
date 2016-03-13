@@ -109,4 +109,4 @@ else
 # fix emacs.d/server identity for the hell of it (could be broken on some machines)
 $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $acl = Get-ACL $env:USERPROFILE/.emacs.d/server
-$acl.SetOwner($user.Name)
+$acl.SetOwner($user)
