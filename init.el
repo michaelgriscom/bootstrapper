@@ -96,7 +96,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(wombat
+                         spacemacs-dark
                          spacemacs-light
                          solarized-light
                          solarized-dark
@@ -207,7 +208,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -252,7 +253,6 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
     (setq-default evil-escape-key-sequence "jk")
-    (setq-default dotspacemacs-line-numbers t)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will

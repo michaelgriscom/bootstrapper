@@ -63,4 +63,13 @@ else
 }
 
 
+if (Get-Command "e.bat" -ErrorAction SilentlyContinue)
+{
+    echo "This machine has e.bat in the path"
+}
+else
+{
+    echo "Adding batch files to path"
+    [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\.spacemacs.d\batch\", "Machine")
+}
 
