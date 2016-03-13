@@ -80,8 +80,8 @@ if (Get-Command "e.bat" -ErrorAction SilentlyContinue)
 }
 else
 {
-    echo "Adding batch files to path"
-    [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\.spacemacs.d\batch\", "Machine")
+    echo "Adding scripts to path"
+    [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\.spacemacs.d\scripts\", "Machine")
 }
 
 if (Test-Path $env:USERPROFILE\bin\)
