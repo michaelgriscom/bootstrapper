@@ -33,6 +33,7 @@ values."
      shell-default-height 30
      shell-default-position 'bottom)
      ;; spell-checking
+     windows-scripts
      syntax-checking
      ;; version-control
      )
@@ -250,8 +251,9 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
-    (setq-default evil-escape-key-sequence "jk"))  
+    (setq-default evil-escape-key-sequence "jk")
     (setq-default dotspacemacs-line-numbers t)
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
