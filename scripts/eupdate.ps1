@@ -105,3 +105,8 @@ else
     wget https://github.com/monochromegane/the_platinum_searcher/releases/download/v2.1.1/pt_windows_amd64.zip -outfile $env:temp\pt.zip
     Expand-Archive $env:temp\pt.zip -dest $env:USERPROFILE\bin\
 }
+
+# fix emacs.d/server identity for the hell of it (could be broken on some machines)
+$user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$acl = Get-ACL $env:USERPROFILE/.emacs.d/server
+$acl.SetOwner($user.Name)
