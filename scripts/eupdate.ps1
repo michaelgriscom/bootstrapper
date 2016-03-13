@@ -61,7 +61,16 @@ else
 }
 
 # check regkey to turn off scaling
-$layers = Get-Item "hklm:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers\"
+$layerspath = "hklm:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers\"
+# create it if it doesn't exist.
+if(!(Test-Path $layerspath))
+{
+    echo "This machine doesn't have the AppCompatFlags\Layers key, creating it."
+    New-Item -Path $layerspath -Force
+}
+
+$layers = Get-Item $layerspath
+
 if ($layers.GetValueNames().Contains("c:\emacs\bin\emacs.exe"))
 {
     echo "This machine has the highdpi aware registry flags set on the emacs exes."
