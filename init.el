@@ -120,11 +120,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Consolas"
-                               :size 14
-                               :weight normal
-                               :width normal
-                               :powerline-scale 1.1)
+   dotspacemacs-default-font (my/dynamicfont)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -272,6 +268,25 @@ you should place you code here."
              ;; Change this with your path to MSYS bin directory
              "C:\\msys64\\usr\\bin;"
              (getenv "PATH")))
+)
+
+(defun my/dynamicfont ()
+  ;; set text size according to screen resolution
+  (if (eq (nth 3(car(car(display-monitor-attributes-list)))) '3840)
+      ;; 3840 pixels wide; this is my 4k monitor and I need a larger font
+      '("Consolas"
+        :size 19
+        :weight normal
+        :width normal
+        :powerline-scale 1.1)
+
+      ;; default to this
+      '("Consolas"
+        :size 14
+        :weight normal
+        :width normal
+        :powerline-scale 1.1)
+  )
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
