@@ -25,7 +25,8 @@ values."
      ;; ----------------------------------------------------------------
      auto-completion
      better-defaults
-     emacs-lisp
+     colors
+     emoji
      git
      markdown
      ;; org
@@ -37,6 +38,16 @@ values."
      syntax-checking
      games
      ;; version-control
+     ;; languages
+     c-c++
+     csharp
+     emacs-lisp
+     html
+     java
+     javascript
+     markdown
+     python
+     shell-scripts
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
