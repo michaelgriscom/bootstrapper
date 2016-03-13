@@ -165,3 +165,10 @@ else
     wget http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20160205.exe -outfile $env:temp\msys2.exe
     Start-Process -FilePath "$env:temp\msys2.exe"
 }
+
+
+# finally start emacs to update packages.
+if (Test-path $env:USERPROFILE/.spacemacs.d/scripts/e.bat)
+{
+    & $env:USERPROFILE/.spacemacs.d/scripts/e.bat
+}
