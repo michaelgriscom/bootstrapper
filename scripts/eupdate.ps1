@@ -1,5 +1,16 @@
 #Requires -RunAsAdministrator
 
+function Expand-Zip-OldPS($file, $destination)
+{
+    $shell = New-Object -com shell.application
+    $zip = $shell.NameSpace($file)
+    foreach ($item in $zip.items())
+    {
+        $shell.NameSpace($destination).copyhere($item)
+    }
+
+}
+
 if (!$env:HOME) # emacs looks here to pull in the spacemacs config.
 {
     echo "Setting HOME environment variable to $env:USERPROFILE"
@@ -25,6 +36,11 @@ if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
         echo ".spacemacs.d doesn't exist. cloning from my github"
         pushd $env:USERPROFILE
         git clone git@github.com:mjlim/.spacemacs.d.git
+        if (!(Test-path $env:USERPROFILE/.spacemacs.d/))
+        {
+            echo "cloning failed. falling back to https clone"
+            git clone https://github.com/mjlim/.spacemacs.d.git
+        }
         popd
     }
 
@@ -57,7 +73,14 @@ else
 {
     echo "This machine doesn't have emacs installed; getting it & installing to c:\emacs"
     wget http://d.mjlim.net/~mikel/emacs.zip -outfile $env:temp\emacs.zip
-    Expand-Archive $env:temp\emacs.zip -dest c:\
+    if (Get-Command "Expand-Archive" --errorAction SilentlyContinue)
+    {
+        Expand-Archive $env:temp\emacs.zip -dest c:\
+    }
+    else
+    {
+        Expand-Zip-OldPS $env:temp\emacs.zip c:\
+    }
 }
 
 # check regkey to turn off scaling
@@ -112,14 +135,25 @@ else
 {
     echo "This machine doesn't have pt.exe, getting it."
     wget https://github.com/monochromegane/the_platinum_searcher/releases/download/v2.1.1/pt_windows_amd64.zip -outfile $env:temp\pt.zip
-    Expand-Archive $env:temp\pt.zip -dest $env:USERPROFILE\bin\
+    if (Get-Command "Expand-Archive" --errorAction SilentlyContinue)
+    {
+        Expand-Archive $env:temp\pt.zip -dest $env:USERPROFILE\bin\
+    }
+    else
+    {
+        Expand-Zip-OldPS $env:temp\pt.zip $env:USERPROFILE\bin\
+    }
 }
 
 # fix emacs.d/server identity for the hell of it (could be broken on some machines)
-$user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-$acl = Get-ACL $env:USERPROFILE/.emacs.d/server
-$acl.SetOwner($user.User)
-Set-Acl -Path $env:USERPROFILE/.emacs.d/server -AclObject $acl
+$serverpath = $env:USERPROFILE/.emacs.d/server
+if (Test-Path serverpath)
+{
+    $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $acl = Get-ACL $serverpath
+    $acl.SetOwner($user.User)
+    Set-Acl -Path $serverpath -AclObject $acl
+}
 
 if (Test-Path c:\msys64)
 {
