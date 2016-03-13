@@ -110,3 +110,4 @@ else
 $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $acl = Get-ACL $env:USERPROFILE/.emacs.d/server
 $acl.SetOwner($user.User)
+Set-Acl -Path $env:USERPROFILE/.emacs.d/server -AclObject $acl
