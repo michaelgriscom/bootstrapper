@@ -1,4 +1,4 @@
-##Requires -RunAsAdministrator
+#Requires -RunAsAdministrator
 
 if (!$env:HOME) # emacs looks here to pull in the spacemacs config.
 {
@@ -62,7 +62,6 @@ else
     echo "if that failed, try again as admin."
 }
 
-
 if (Get-Command "e.bat" -ErrorAction SilentlyContinue)
 {
     echo "This machine has e.bat in the path"
@@ -73,3 +72,25 @@ else
     [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\.spacemacs.d\batch\", "Machine")
 }
 
+if (Test-Path $env:USERPROFILE\bin\)
+{
+    echo "This machine has a local bin directory in the path"
+}
+else
+{
+    echo "This machine does not have a local bin directory in the path. Creating & adding to path."
+    mkdir $env:USERPROFILE\bin\
+    [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\bin\", "Machine")
+}
+
+# todo get pt 
+if (Get-Command "pt.exe" -ErrorAction SilentlyContinue)
+{
+    echo "This machine has pt.exe in the path"
+}
+else
+{
+    echo "This machine doesn't have pt.exe, getting it."
+    wget https://github.com/monochromegane/the_platinum_searcher/releases/download/v2.1.1/pt_windows_amd64.zip -outfile $env:temp\pt.zip
+    Expand-Archive $env:temp\pt.zip -dest $env:USERPROFILE\bin\
+}
