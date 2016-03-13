@@ -111,3 +111,14 @@ $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $acl = Get-ACL $env:USERPROFILE/.emacs.d/server
 $acl.SetOwner($user.User)
 Set-Acl -Path $env:USERPROFILE/.emacs.d/server -AclObject $acl
+
+if (Test-Path c:\msys64)
+{
+    echo "This machine has msys64 installed in c:\msys64"
+}
+else
+{
+    echo "This machine doesn't have msys64 installed in c:\msys64, getting the installer"
+    wget http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20160205.exe -outfile $env:temp\msys2.exe
+    Start-Process -FilePath "$env:temp\msys2.exe"
+}

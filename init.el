@@ -35,6 +35,7 @@ values."
      ;; spell-checking
      windows-scripts
      syntax-checking
+     games
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
@@ -109,7 +110,7 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Consolas"
-                               :size 14
+                               :size 18
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -253,6 +254,13 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
     (setq-default evil-escape-key-sequence "jk")
+    (setq projectile-indexing-method 'alien)
+
+    (setenv "PATH"
+            (concat
+             ;; Change this with your path to MSYS bin directory
+             "C:\\msys64\\usr\\bin;"
+             (getenv "PATH")))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
