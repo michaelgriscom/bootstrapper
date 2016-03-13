@@ -251,6 +251,7 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
     (setq-default evil-escape-key-sequence "jk"))  
+    (setq-default dotspacemacs-line-numbers t)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
