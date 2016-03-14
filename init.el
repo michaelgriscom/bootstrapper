@@ -37,6 +37,7 @@ values."
      windows-scripts
      syntax-checking
      games
+     semantic
      ;; version-control
      ;; languages
      c-c++
