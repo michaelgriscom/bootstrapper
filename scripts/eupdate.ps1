@@ -157,13 +157,31 @@ if (Test-Path serverpath)
 
 if (Test-Path c:\msys64)
 {
-    echo "This machine has msys64 installed in c:\msys64"
+    echo "This machine has msys2 installed in c:\msys64"
 }
 else
 {
-    echo "This machine doesn't have msys64 installed in c:\msys64, getting the installer"
+    echo "This machine doesn't have msys2 installed in c:\msys64, getting the installer"
     wget http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20160205.exe -outfile $env:temp\msys2.exe
     Start-Process -FilePath "$env:temp\msys2.exe"
+}
+
+if (Test-Path c:\msys64)
+{
+    echo "Since msys2 is installed, making sure it has all the packages needed."
+    if (Test-Path c:\msys64\usr\bin\cscope.exe)
+    {
+        echo "msys2 has cscope installed"
+    }
+    else
+    {
+        echo "msys2 doesn't have cscope installed, installing package using pacman."
+        C:\msys64\usr\bin\bash.exe --login -c "pacman -S --noconfirm cscope"
+    }
+}
+else
+{
+    echo "Not doing anything with msys2 packages since it doesn't appear to be installed at this time."
 }
 
 
