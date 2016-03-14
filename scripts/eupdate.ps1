@@ -170,5 +170,7 @@ else
 # finally start emacs to update packages.
 if (Test-path $env:USERPROFILE/.spacemacs.d/scripts/e.bat)
 {
-    & $env:USERPROFILE/.spacemacs.d/scripts/e.bat
+    # load runemacs.exe since for some reason that makes windows start honoring the dpi flag regkeys???
+    Start-Process -FilePath "c:\emacs\bin\runemacs.exe"
+    # & $env:USERPROFILE/.spacemacs.d/scripts/e.bat
 }
