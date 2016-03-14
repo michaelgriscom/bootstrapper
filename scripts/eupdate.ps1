@@ -1,12 +1,19 @@
 #Requires -RunAsAdministrator
 
-function Expand-Zip-OldPS($file, $destination)
+function Expand-Zip($file, $destination)
 {
-    $shell = New-Object -com shell.application
-    $zip = $shell.NameSpace($file)
-    foreach ($item in $zip.items())
+    if (Get-Command "Expand-Archive" --errorAction SilentlyContinue)
     {
-        $shell.NameSpace($destination).copyhere($item)
+        Expand-Archive $file -dest $destination
+    }
+    else
+    {
+        $shell = New-Object -com shell.application
+        $zip = $shell.NameSpace($file)
+        foreach ($item in $zip.items())
+        {
+            $shell.NameSpace($destination).copyhere($item)
+        }
     }
 
 }
@@ -73,14 +80,7 @@ else
 {
     echo "This machine doesn't have emacs installed; getting it & installing to c:\emacs"
     wget http://d.mjlim.net/~mikel/emacs.zip -outfile $env:temp\emacs.zip
-    if (Get-Command "Expand-Archive" --errorAction SilentlyContinue)
-    {
-        Expand-Archive $env:temp\emacs.zip -dest c:\
-    }
-    else
-    {
-        Expand-Zip-OldPS $env:temp\emacs.zip c:\
-    }
+    Expand-Zip $env:temp\emacs.zip c:\
 }
 
 # check regkey to turn off scaling
@@ -135,14 +135,7 @@ else
 {
     echo "This machine doesn't have pt.exe, getting it."
     wget https://github.com/monochromegane/the_platinum_searcher/releases/download/v2.1.1/pt_windows_amd64.zip -outfile $env:temp\pt.zip
-    if (Get-Command "Expand-Archive" --errorAction SilentlyContinue)
-    {
-        Expand-Archive $env:temp\pt.zip -dest $env:USERPROFILE\bin\
-    }
-    else
-    {
-        Expand-Zip-OldPS $env:temp\pt.zip $env:USERPROFILE\bin\
-    }
+    Expand-Zip $env:temp\pt.zip $env:USERPROFILE\bin\
 }
 
 # fix emacs.d/server identity for the hell of it (could be broken on some machines)
