@@ -26,6 +26,7 @@ values."
      auto-completion
      better-defaults
      colors
+     cscope
      emoji
      git
      markdown
@@ -266,9 +267,10 @@ you should place you code here."
 
     (setenv "PATH"
             (concat
-             ;; Change this with your path to MSYS bin directory
              "C:\\msys64\\usr\\bin;"
              (getenv "PATH")))
+
+    (setq exec-path (append exec-path '("c:\\msys64\\usr\\bin")))
 
     (setq themes-megapack-packages '(zenburn))
 )
