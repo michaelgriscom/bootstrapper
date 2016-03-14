@@ -274,6 +274,15 @@ you should place you code here."
     (setq exec-path (append exec-path '("c:\\msys64\\usr\\bin")))
 
     (setq themes-megapack-packages '(zenburn))
+
+    (setq-default indent-tabs-mode nil)
+    (setq-default tab-width 4
+                  c-basic-offset 4
+                  evil-shift-width 4)
+
+    (setq-default evil-visual-state-cursor 'box
+                  evil-insert-state-cursor 'bar
+                  evil-emacs-state-cursor 'hbar)
 )
 
 (defun my/dynamicfont ()
