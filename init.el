@@ -28,6 +28,7 @@ values."
      colors
      cscope
      emoji
+     eyebrowse
      git
      markdown
      ;; org
