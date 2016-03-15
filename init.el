@@ -56,7 +56,9 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+                                      dtrt-indent
+                                     )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -274,7 +276,9 @@ you should place you code here."
 
     (setq exec-path (append exec-path '("c:\\msys64\\usr\\bin")))
 
-    (setq themes-megapack-packages '(zenburn))
+    (setq themes-megapack-packages '(zenburn)
+          dtrt-indent-mode t ;; enable dtrt indent mode
+          )
 
     (setq-default indent-tabs-mode nil
                   tab-width 4
