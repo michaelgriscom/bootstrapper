@@ -275,12 +275,11 @@ you should place you code here."
 
     (setq themes-megapack-packages '(zenburn))
 
-    (setq-default indent-tabs-mode nil)
-    (setq-default tab-width 4
+    (setq-default indent-tabs-mode nil
+                  tab-width 4
                   c-basic-offset 4
-                  evil-shift-width 4)
-
-    (setq-default evil-visual-state-cursor 'box
+                  evil-shift-width 4
+                  evil-visual-state-cursor 'box
                   evil-insert-state-cursor 'bar
                   evil-emacs-state-cursor 'hbar)
 )
