@@ -289,14 +289,14 @@ you should place you code here."
   (if (eq (nth 3(car(car(display-monitor-attributes-list)))) '3840)
       ;; 3840 pixels wide; this is my 4k monitor and I need a larger font
       '("Consolas"
-        :size 19
+        :size 17
         :weight normal
         :width normal
         :powerline-scale 1.1)
 
       ;; default to this
       '("Consolas"
-        :size 14
+        :size 12
         :weight normal
         :width normal
         :powerline-scale 1.1)
