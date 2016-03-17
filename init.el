@@ -287,6 +287,10 @@ you should place you code here."
                   evil-visual-state-cursor 'box
                   evil-insert-state-cursor 'bar
                   evil-emacs-state-cursor 'hbar)
+
+    ;; extra keybindings
+    (spacemacs/set-leader-keys "w TAB" 'spacemacs/workspaces-micro-state)
+
 )
 
 (defun my/dynamicfont ()
