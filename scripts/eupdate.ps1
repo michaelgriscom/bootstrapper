@@ -30,7 +30,11 @@ else
 
 if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
 {
-    echo "This machine has git."
+    echo "This machine has git. Configuring for performance on Windows."
+    git config --global core.preloadindex true
+    git config --global core.fscache true
+    git config --global gc.auto 256
+
     if (Test-path $env:USERPROFILE/.spacemacs.d/)
     {
         echo ".spacemacs.d exists. updating it..."
