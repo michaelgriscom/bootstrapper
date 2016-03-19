@@ -269,12 +269,15 @@ you should place you code here."
     (setq-default evil-escape-key-sequence "jk")
     (setq projectile-indexing-method 'alien)
 
-    (setenv "PATH"
-            (concat
-             "C:\\msys64\\usr\\bin;"
-             (getenv "PATH")))
+    ;; windows only environment stuff
+    (if (eq system-type 'windows-nt)
+        (progn
+            (setenv "PATH"
+                (concat
+                "C:\\msys64\\usr\\bin;"
+                (getenv "PATH")))
 
-    (setq exec-path (append exec-path '("c:\\msys64\\usr\\bin")))
+            (setq exec-path (append exec-path '("c:\\msys64\\usr\\bin")))))
 
     (setq themes-megapack-packages '(zenburn)
           dtrt-indent-mode t ;; enable dtrt indent mode
@@ -295,12 +298,14 @@ you should place you code here."
     ;; extra keybindings
     (spacemacs/set-leader-keys "TAB" 'spacemacs/workspaces-micro-state)
     (spacemacs/set-leader-keys "b TAB" 'evil-switch-to-windows-last-buffer)
-    (spacemacs/set-leader-keys "a e" 'my/windowsExplorer)
 
     ;; zoom
     (global-set-key (kbd "C--") 'spacemacs/zoom-frm-out)
     (global-set-key (kbd "C-=") 'spacemacs/zoom-frm-in)
 
+    ;; windows only bindings
+    (if (eq system-type 'windows-nt)
+        (spacemacs/set-leader-keys "a e" 'my/windowsExplorer))
 )
 
 (defun my/dynamicfont ()
