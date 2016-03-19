@@ -15,7 +15,19 @@ function Expand-Zip($file, $destination)
             $shell.NameSpace($destination).copyhere($item)
         }
     }
+}
 
+function Msys2-Install-Package-If-File-Missing($package, $file)
+{
+    if (Test-Path "c:\msys64\usr\bin\$file")
+    {
+        echo "msys2 has $package installed"
+    }
+    else
+    {
+        echo "msys2 doesn't have $package installed, installing package using pacman."
+        C:\msys64\usr\bin\bash.exe --login -c "pacman -S --noconfirm $package"
+    }
 }
 
 if (!$env:HOME) # emacs looks here to pull in the spacemacs config.
@@ -166,14 +178,16 @@ else
 if (Test-Path c:\msys64)
 {
     echo "Since msys2 is installed, making sure it has all the packages needed."
-    if (Test-Path c:\msys64\usr\bin\cscope.exe)
+    Msys2-Install-Package-If-File-Missing "cscope" "cscope.exe";
+    Msys2-Install-Package-If-File-Missing "openssh" "ssh.exe";
+    Msys2-Install-Package-If-File-Missing "dos2unix" "dos2unix.exe";
+
+    if (!(Test-Path c:\msys64\etc\nsswitch.conf.bak))
     {
-        echo "msys2 has cscope installed"
-    }
-    else
-    {
-        echo "msys2 doesn't have cscope installed, installing package using pacman."
-        C:\msys64\usr\bin\bash.exe --login -c "pacman -S --noconfirm cscope"
+        echo "Patching mysys2/etc/nsswitch.conf so ssh can use profile/.ssh"
+        Copy-Item c:\msys64\etc\nsswitch.conf c:\msys64\etc\nsswitch.conf.bak
+        Get-Content c:\msys64\etc\nsswitch.conf.bak | Foreach-Object {$_ -replace '^db_home.*$', "db_home: windows cygwin desc"} | Out-File c:\msys64\etc\nsswitch.conf
+        C:\msys64\usr\bin\dos2unix.exe c:\msys64\etc\nsswitch.conf
     }
 }
 else
