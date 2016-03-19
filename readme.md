@@ -15,4 +15,10 @@ paste this into an admin powershell
 
 setup (linux)
 ======
-todo lol
+1. install emacs using package manager
+2. appropriate clones (paste the block)
+
+    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+    git clone git@github.com:mjlim/.spacemacs.d.git ~/.spacemacs.d
+
+3. tbd
