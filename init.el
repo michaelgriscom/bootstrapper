@@ -313,8 +313,20 @@ you should place you code here."
     ;; windows only bindings
     (if (eq system-type 'windows-nt)
         (progn
-          (spacemacs/set-leader-keys "a e" 'my/windowsExplorer)
-          (spacemacs/set-leader-keys "a s 2" 'my/msys2shell) ;; todo: launch as inferior shell in a buffer instead of cmd window
+            (spacemacs/set-leader-keys "a e" 'my/windowsExplorer)
+            (spacemacs/set-leader-keys "a s 2" 'my/msys2shell) ;; todo: launch as inferior shell in a buffer instead of cmd window
+
+
+    ;; windows only tramp fixes
+            (with-eval-after-load "tramp"
+              (progn
+                (setq tramp-default-method "ssh")
+
+                (nconc (cadr (assq 'tramp-login-args (assoc "ssh" tramp-methods)))
+                       '(("bash" "-i")))
+                (setcdr (assq 'tramp-remote-sh (assoc "ssh" tramp-methods))
+                        '("bash -i"))
+              ))
           ))
 )
 
