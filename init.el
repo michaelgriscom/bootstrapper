@@ -353,75 +353,23 @@ See the help for `shell' for more details.  \(Type
    (list
     (and current-prefix-arg
          (read-buffer "Shell buffer: "
-                      (generate-new-buffer-name "*PowerShell*")))))
+                      (generate-new-buffer-name "*msys2*")))))
 
-  (setq buffer (get-buffer-create (or buffer "*PowerShell*")))
-  (powershell-log 1 "powershell starting up...in buffer %s" (buffer-name buffer))
-  (let ((explicit-shell-file-name (if (eq system-type 'cygwin)
-				      (cygwin-convert-file-name-from-windows powershell-location-of-exe)
-				    powershell-location-of-exe)))
+  (setq buffer (get-buffer-create (or buffer "*msys2*")))
+  (powershell-log 1 "msys2 starting up...in buffer %s" (buffer-name buffer))
+  (let ((explicit-shell-file-name "c:/msys64/msys2_shell.bat"))
     ;; set arguments for the powershell exe.
     ;; Does this need to be tunable?
 
     (shell buffer))
 
-  ;; (powershell--get-max-window-width "*PowerShell*")
-  ;; (powershell-invoke-command-silently (get-buffer-process "*csdeshell*")
-  ;; "[Ionic.Csde.Utilities]::Version()" 2.9)
-
-  ;;  (comint-simple-send (get-buffer-process "*csdeshell*") "prompt\n")
-
   (let ((proc (get-buffer-process buffer)))
 
-    (make-local-variable 'powershell-prompt-regex)
-    (make-local-variable 'powershell-command-reply)
-    (make-local-variable 'powershell--max-window-width)
-    (make-local-variable 'powershell-command-timeout-seconds)
-    (make-local-variable 'powershell-squish-results-of-silent-commands)
-    (make-local-variable 'powershell--need-rawui-resize)
     (make-local-variable 'comint-prompt-read-only)
 
     ;; disallow backspace over the prompt:
     (setq comint-prompt-read-only t)
 
-    ;; We need to tell powershell how wide the emacs window is, because
-    ;; powershell pads its output to the width it thinks its window is.
-    ;;
-    ;; The way it's done: every time the width of the emacs window changes, we
-    ;; set a flag. Then, before sending a powershell command that is
-    ;; typed into the buffer, to the actual powershell process, we check
-    ;; that flag.  If it is set, we  resize the powershell window appropriately,
-    ;; before sending the command.
-
-    ;; If we didn't do this, powershell output would get wrapped at a
-    ;; column width that would be different than the emacs buffer width,
-    ;; and everything would look ugly.
-
-    ;; get the maximum width for powershell - can't go beyond this
-    (powershell--get-max-window-width buffer)
-
-    ;; define the function for use within powershell to resize the window
-    (powershell--define-set-window-width-function proc)
-
-    ;; add the hook that sets the flag
-    (add-hook 'window-size-change-functions
-              '(lambda (&optional x)
-                 (setq powershell--need-rawui-resize t)))
-
-    ;; set the flag so we resize properly the first time.
-    (setq powershell--need-rawui-resize t)
-
-    (if prompt-string
-        (progn
-          ;; This sets up a prompt for the PowerShell.  The prompt is
-          ;; important because later, after sending a command to the
-          ;; shell, the scanning logic that grabs the output looks for
-          ;; the prompt string to determine that the output is complete.
-          (comint-simple-send
-           proc
-           (concat "function prompt { '" prompt-string "' }"))
-
-          (setq powershell-prompt-regex prompt-string)))
 
     ;; hook the kill-buffer action so we can kill the inferior process?
     (add-hook 'kill-buffer-hook 'powershell-delete-process)
