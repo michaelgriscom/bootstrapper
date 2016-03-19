@@ -288,9 +288,15 @@ you should place you code here."
                   evil-insert-state-cursor 'bar
                   evil-emacs-state-cursor 'hbar)
 
+    (defun my/windowsExplorer()
+      (interactive)
+        (call-process-shell-command "start ." nil 0))
+
     ;; extra keybindings
     (spacemacs/set-leader-keys "TAB" 'spacemacs/workspaces-micro-state)
     (spacemacs/set-leader-keys "b TAB" 'evil-switch-to-windows-last-buffer)
+    (spacemacs/set-leader-keys "a e" 'my/windowsExplorer)
+
     ;; zoom
     (global-set-key (kbd "C--") 'spacemacs/zoom-frm-out)
     (global-set-key (kbd "C-=") 'spacemacs/zoom-frm-in)
