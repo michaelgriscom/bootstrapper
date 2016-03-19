@@ -289,10 +289,12 @@ you should place you code here."
                   evil-emacs-state-cursor 'hbar)
 
     ;; extra keybindings
-    (spacemacs/set-leader-keys "w TAB" 'spacemacs/workspaces-micro-state)
+    (spacemacs/set-leader-keys "TAB" 'spacemacs/workspaces-micro-state)
+    (spacemacs/set-leader-keys "b TAB" 'evil-switch-to-windows-last-buffer)
     ;; zoom
     (global-set-key (kbd "C--") 'spacemacs/zoom-frm-out)
     (global-set-key (kbd "C-=") 'spacemacs/zoom-frm-in)
+
 )
 
 (defun my/dynamicfont ()
