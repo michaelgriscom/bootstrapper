@@ -291,9 +291,16 @@ you should place you code here."
                   evil-insert-state-cursor 'bar
                   evil-emacs-state-cursor 'hbar)
 
-    (defun my/windowsExplorer()
-      (interactive)
-        (call-process-shell-command "start ." nil 0))
+    ;; Extra functions on Windows
+    (if (eq system-type 'windows-nt)
+        (progn
+          (defun my/windowsExplorer()
+            (interactive)
+            (call-process-shell-command "start ." nil 0))
+          (defun my/msys2shell()
+            (interactive)
+            (call-process-shell-command "cmd.exe /A /Q /K C:/msys64/msys2_shell.bat" nil 0))
+          ))
 
     ;; extra keybindings
     (spacemacs/set-leader-keys "TAB" 'spacemacs/workspaces-micro-state)
@@ -305,7 +312,10 @@ you should place you code here."
 
     ;; windows only bindings
     (if (eq system-type 'windows-nt)
-        (spacemacs/set-leader-keys "a e" 'my/windowsExplorer))
+        (progn
+          (spacemacs/set-leader-keys "a e" 'my/windowsExplorer)
+          (spacemacs/set-leader-keys "a s 2" 'my/msys2shell) ;; todo: launch as inferior shell in a buffer instead of cmd window
+          ))
 )
 
 (defun my/dynamicfont ()
