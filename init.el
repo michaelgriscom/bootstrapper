@@ -291,9 +291,16 @@ you should place you code here."
                   evil-insert-state-cursor 'bar
                   evil-emacs-state-cursor 'hbar)
 
-    (defun my/windowsExplorer()
-      (interactive)
-        (call-process-shell-command "start ." nil 0))
+    ;; Extra functions on Windows
+    (if (eq system-type 'windows-nt)
+        (progn
+            (defun my/windowsExplorer()
+            (interactive)
+                (call-process-shell-command "start ." nil 0))
+            (defun my/msys2shell()
+              (interactive)
+              (call-process-shell-command "cmd.exe /A /Q /K C:/msys64/msys2_shell.bat" nil 0))
+    ))
 
     ;; extra keybindings
     (spacemacs/set-leader-keys "TAB" 'spacemacs/workspaces-micro-state)
@@ -305,7 +312,10 @@ you should place you code here."
 
     ;; windows only bindings
     (if (eq system-type 'windows-nt)
-        (spacemacs/set-leader-keys "a e" 'my/windowsExplorer))
+        (progn
+            (spacemacs/set-leader-keys "a e" 'my/windowsExplorer)
+            (spacemacs/set-leader-keys "a s 2" 'my/msys2shell)
+    ))
 )
 
 (defun my/dynamicfont ()
@@ -326,6 +336,115 @@ you should place you code here."
         :powerline-scale 1.1)
   )
 )
+;;;###autoload
+(defun msys2shell (&optional buffer prompt-string)
+  "Run an inferior PowerShell.
+If BUFFER is non-nil, use it to hold the powershell
+process.  Defaults to *PowerShell*.
+Interactively, a prefix arg means to prompt for BUFFER.
+If BUFFER exists but the shell process is not running, it makes a
+new shell.
+If BUFFER exists and the shell process is running, just switch to
+BUFFER.
+If PROMPT-STRING is non-nil, sets the prompt to the given value.
+See the help for `shell' for more details.  \(Type
+\\[describe-mode] in the shell buffer for a list of commands.)"
+  (interactive
+   (list
+    (and current-prefix-arg
+         (read-buffer "Shell buffer: "
+                      (generate-new-buffer-name "*PowerShell*")))))
+
+  (setq buffer (get-buffer-create (or buffer "*PowerShell*")))
+  (powershell-log 1 "powershell starting up...in buffer %s" (buffer-name buffer))
+  (let ((explicit-shell-file-name (if (eq system-type 'cygwin)
+				      (cygwin-convert-file-name-from-windows powershell-location-of-exe)
+				    powershell-location-of-exe)))
+    ;; set arguments for the powershell exe.
+    ;; Does this need to be tunable?
+
+    (shell buffer))
+
+  ;; (powershell--get-max-window-width "*PowerShell*")
+  ;; (powershell-invoke-command-silently (get-buffer-process "*csdeshell*")
+  ;; "[Ionic.Csde.Utilities]::Version()" 2.9)
+
+  ;;  (comint-simple-send (get-buffer-process "*csdeshell*") "prompt\n")
+
+  (let ((proc (get-buffer-process buffer)))
+
+    (make-local-variable 'powershell-prompt-regex)
+    (make-local-variable 'powershell-command-reply)
+    (make-local-variable 'powershell--max-window-width)
+    (make-local-variable 'powershell-command-timeout-seconds)
+    (make-local-variable 'powershell-squish-results-of-silent-commands)
+    (make-local-variable 'powershell--need-rawui-resize)
+    (make-local-variable 'comint-prompt-read-only)
+
+    ;; disallow backspace over the prompt:
+    (setq comint-prompt-read-only t)
+
+    ;; We need to tell powershell how wide the emacs window is, because
+    ;; powershell pads its output to the width it thinks its window is.
+    ;;
+    ;; The way it's done: every time the width of the emacs window changes, we
+    ;; set a flag. Then, before sending a powershell command that is
+    ;; typed into the buffer, to the actual powershell process, we check
+    ;; that flag.  If it is set, we  resize the powershell window appropriately,
+    ;; before sending the command.
+
+    ;; If we didn't do this, powershell output would get wrapped at a
+    ;; column width that would be different than the emacs buffer width,
+    ;; and everything would look ugly.
+
+    ;; get the maximum width for powershell - can't go beyond this
+    (powershell--get-max-window-width buffer)
+
+    ;; define the function for use within powershell to resize the window
+    (powershell--define-set-window-width-function proc)
+
+    ;; add the hook that sets the flag
+    (add-hook 'window-size-change-functions
+              '(lambda (&optional x)
+                 (setq powershell--need-rawui-resize t)))
+
+    ;; set the flag so we resize properly the first time.
+    (setq powershell--need-rawui-resize t)
+
+    (if prompt-string
+        (progn
+          ;; This sets up a prompt for the PowerShell.  The prompt is
+          ;; important because later, after sending a command to the
+          ;; shell, the scanning logic that grabs the output looks for
+          ;; the prompt string to determine that the output is complete.
+          (comint-simple-send
+           proc
+           (concat "function prompt { '" prompt-string "' }"))
+
+          (setq powershell-prompt-regex prompt-string)))
+
+    ;; hook the kill-buffer action so we can kill the inferior process?
+    (add-hook 'kill-buffer-hook 'powershell-delete-process)
+
+    ;; wrap the comint-input-sender with a PS version
+    ;; must do this after launching the shell!
+    (make-local-variable 'comint-input-sender)
+    (setq comint-input-sender 'powershell-simple-send)
+
+    ;; set a preoutput filter for powershell.  This will trim newlines
+    ;; after the prompt.
+    (add-hook 'comint-preoutput-filter-functions
+              'powershell-preoutput-filter-for-prompt)
+
+    ;; send a carriage-return  (get the prompt)
+    (comint-send-input)
+    (accept-process-output proc))
+
+  ;; The launch hooks for powershell has not (yet?) been implemented
+  ;;(run-hooks 'powershell-launch-hook)
+
+  ;; return the buffer created
+  buffer)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
