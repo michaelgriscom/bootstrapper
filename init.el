@@ -290,7 +290,9 @@ you should place you code here."
 
     ;; extra keybindings
     (spacemacs/set-leader-keys "w TAB" 'spacemacs/workspaces-micro-state)
-
+    ;; zoom
+    (global-set-key (kbd "C--") 'spacemacs/zoom-frm-out)
+    (global-set-key (kbd "C-=") 'spacemacs/zoom-frm-in)
 )
 
 (defun my/dynamicfont ()
