@@ -300,6 +300,9 @@ you should place you code here."
           (defun my/msys2shell()
             (interactive)
             (call-process-shell-command "cmd.exe /A /Q /K C:/msys64/msys2_shell.bat" nil 0))
+
+          ;; fix tramp on windows
+          (setq tramp-default-method "sshx")
           ))
 
     ;; extra keybindings
