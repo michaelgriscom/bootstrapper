@@ -25,6 +25,7 @@ values."
      ;; ----------------------------------------------------------------
      auto-completion
      better-defaults
+     chrome
      colors
      cscope
      emoji
