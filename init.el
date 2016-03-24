@@ -28,7 +28,6 @@ values."
      colors
      cscope
      emoji
-     eyebrowse
      git
      markdown
      ;; org
@@ -305,9 +304,9 @@ you should place you code here."
           (setq tramp-default-method "sshx")
           ))
 
-    ;; extra keybindings
-    (spacemacs/set-leader-keys "TAB" 'spacemacs/workspaces-micro-state)
-    (spacemacs/set-leader-keys "b TAB" 'evil-switch-to-windows-last-buffer)
+    ;; extra keybindings when eyebrowse is enabled
+    ;;(spacemacs/set-leader-keys "TAB" 'spacemacs/workspaces-micro-state)
+    ;;(spacemacs/set-leader-keys "b TAB" 'evil-switch-to-windows-last-buffer)
 
     ;; zoom
     (global-set-key (kbd "C--") 'spacemacs/zoom-frm-out)
