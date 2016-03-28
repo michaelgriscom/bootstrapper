@@ -299,10 +299,14 @@ you should place you code here."
             (call-process-shell-command "start ." nil 0))
           (defun my/msys2shell()
             (interactive)
-            (call-process-shell-command "cmd.exe /A /Q /K C:/msys64/msys2_shell.bat" nil 0))
+            (let ((explicit-shell-file-name "C:/msys64/usr/bin/bash.exe"))
+              (call-interactively 'shell-pop-shell))
+            )
 
           ;; fix tramp on windows
           (setq tramp-default-method "sshx")
+
+          (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
           ))
 
     ;; extra keybindings when eyebrowse is enabled
