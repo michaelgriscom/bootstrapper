@@ -297,6 +297,9 @@ you should place you code here."
           (defun my/windowsExplorer()
             (interactive)
             (call-process-shell-command "start ." nil 0))
+          (defun my/toDevenv()
+            (interactive)
+            (call-process-shell-command (format "powershell to-devenv.ps1 %s %s %s" buffer-file-name (count-lines 1 (point)) (current-column)) nil 0))
           (defun my/msys2shell()
             (interactive)
             (let ((explicit-shell-file-name "C:/msys64/usr/bin/bash.exe"))
@@ -321,6 +324,7 @@ you should place you code here."
     (if (eq system-type 'windows-nt)
         (progn
           (spacemacs/set-leader-keys "a e" 'my/windowsExplorer)
+          (spacemacs/set-leader-keys "a v" 'my/toDevenv)
           (spacemacs/set-leader-keys "a s 2" 'my/msys2shell) ;; todo: launch as inferior shell in a buffer instead of cmd window
           ))
 )
