@@ -6,6 +6,7 @@
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
 values."
+  (progn ;; ml - hack to allow dynamically adding more layers. note that this explicitly breaks the rule on the above line, so it /could/ break something eventually.
   (setq-default
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
@@ -64,7 +65,17 @@ values."
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
-   dotspacemacs-delete-orphan-packages t))
+   dotspacemacs-delete-orphan-packages t)
+
+  ;; ml - dynamically add these private layers if they exist on the local machine.
+  (setq-default my-extra-configuration-layers
+    '(
+        sourcedepot
+    ))
+  (setq-default my-extra-configuration-layers-available (delq nil (mapcar (lambda (x) (my/layer-if-known x)) my-extra-configuration-layers)))
+  (setq-default dotspacemacs-configuration-layers (append dotspacemacs-configuration-layers my-extra-configuration-layers-available))
+
+  ))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -347,6 +358,16 @@ you should place you code here."
         :powerline-scale 1.1)
   )
 )
+
+(defun my/layer-if-known (layername)
+  ;; add layer if it is known, skip if not
+  (if
+      (member
+       (symbol-name layername)
+       (directory-files configuration-layer-private-directory)
+       )
+      layername 'nil)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
