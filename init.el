@@ -71,6 +71,7 @@ values."
   (setq-default my-extra-configuration-layers
     '(
         sourcedepot
+        office-spacemacs
     ))
   (setq-default my-extra-configuration-layers-available (delq nil (mapcar (lambda (x) (my/layer-if-known x)) my-extra-configuration-layers)))
   (setq-default dotspacemacs-configuration-layers (append dotspacemacs-configuration-layers my-extra-configuration-layers-available))
