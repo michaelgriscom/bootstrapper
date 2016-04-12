@@ -40,6 +40,39 @@ else
     echo "HOME environment variable already exists and is $env:HOME"
 }
 
+if (Test-Path c:\msys64)
+{
+    echo "This machine has msys2 installed in c:\msys64"
+}
+else
+{
+    echo "This machine doesn't have msys2 installed in c:\msys64, getting the installer"
+    wget http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20160205.exe -outfile $env:temp\msys2.exe
+    Start-Process -FilePath "$env:temp\msys2.exe"
+}
+
+if (Test-Path c:\msys64)
+{
+    echo "Since msys2 is installed, making sure it has all the packages needed."
+    Msys2-Install-Package-If-File-Missing "cscope" "cscope.exe";
+    Msys2-Install-Package-If-File-Missing "openssh" "ssh.exe";
+    Msys2-Install-Package-If-File-Missing "dos2unix" "dos2unix.exe";
+    Msys2-Install-Package-If-File-Missing "git" "git.exe";
+
+    if (!(Test-Path c:\msys64\etc\nsswitch.conf.bak))
+    {
+        echo "Patching mysys2/etc/nsswitch.conf so ssh can use profile/.ssh"
+        Copy-Item c:\msys64\etc\nsswitch.conf c:\msys64\etc\nsswitch.conf.bak
+        Get-Content c:\msys64\etc\nsswitch.conf.bak | Foreach-Object {$_ -replace '^db_home.*$', "db_home: windows cygwin desc"} | Out-File c:\msys64\etc\nsswitch.conf
+        C:\msys64\usr\bin\dos2unix.exe c:\msys64\etc\nsswitch.conf
+    }
+}
+else
+{
+    echo "Not doing anything with msys2 packages since it doesn't appear to be installed at this time."
+}
+
+
 if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
 {
     echo "This machine has git. Configuring for performance on Windows."
@@ -82,7 +115,16 @@ if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
 else
 {
     echo "This machine doesn't have git."
-    echo "todo: get git and make sure it's in path. right now: exiting."
+    if (Test-Path "c:\msys64\usr\bin\git.exe")
+    {
+        echo "But git.exe was found in msys2. Adding msys2 bin to path..."
+        [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";c:\msys64\usr\bin\", "Machine")
+        echo "Run this script again. (tl;dr: lazy scripting)"
+    }
+    else
+    {
+        echo "Install git from somewhere & make sure it's in the path."
+    }
     Exit
 }
 
@@ -162,37 +204,6 @@ if (Test-Path $serverpath)
     $acl = Get-ACL $serverpath
     $acl.SetOwner($user.User)
     Set-Acl -Path $serverpath -AclObject $acl
-}
-
-if (Test-Path c:\msys64)
-{
-    echo "This machine has msys2 installed in c:\msys64"
-}
-else
-{
-    echo "This machine doesn't have msys2 installed in c:\msys64, getting the installer"
-    wget http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20160205.exe -outfile $env:temp\msys2.exe
-    Start-Process -FilePath "$env:temp\msys2.exe"
-}
-
-if (Test-Path c:\msys64)
-{
-    echo "Since msys2 is installed, making sure it has all the packages needed."
-    Msys2-Install-Package-If-File-Missing "cscope" "cscope.exe";
-    Msys2-Install-Package-If-File-Missing "openssh" "ssh.exe";
-    Msys2-Install-Package-If-File-Missing "dos2unix" "dos2unix.exe";
-
-    if (!(Test-Path c:\msys64\etc\nsswitch.conf.bak))
-    {
-        echo "Patching mysys2/etc/nsswitch.conf so ssh can use profile/.ssh"
-        Copy-Item c:\msys64\etc\nsswitch.conf c:\msys64\etc\nsswitch.conf.bak
-        Get-Content c:\msys64\etc\nsswitch.conf.bak | Foreach-Object {$_ -replace '^db_home.*$', "db_home: windows cygwin desc"} | Out-File c:\msys64\etc\nsswitch.conf
-        C:\msys64\usr\bin\dos2unix.exe c:\msys64\etc\nsswitch.conf
-    }
-}
-else
-{
-    echo "Not doing anything with msys2 packages since it doesn't appear to be installed at this time."
 }
 
 
