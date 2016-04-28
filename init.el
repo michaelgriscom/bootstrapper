@@ -293,13 +293,13 @@ you should place you code here."
           dtrt-indent-mode t ;; enable dtrt indent mode
           )
 
-    (setq-default indent-tabs-mode nil
-                  tab-width 4
-                  c-basic-offset 4
-                  evil-shift-width 4
-                  evil-visual-state-cursor 'box
-                  evil-insert-state-cursor 'bar
-                  evil-emacs-state-cursor 'hbar)
+;;    (setq-default indent-tabs-mode nil
+;;                  tab-width 4
+;;                  c-basic-offset 4
+;;                  evil-shift-width 4
+;;                  evil-visual-state-cursor 'box
+;;                  evil-insert-state-cursor 'bar
+;;                  evil-emacs-state-cursor 'hbar)
 
     ;; Extra functions on Windows
     (if (eq system-type 'windows-nt)
