@@ -341,10 +341,10 @@ you should place you code here."
 
 (defun my/dynamicfont ()
   ;; set text size according to screen resolution
-  (if (eq (nth 3(car(car(display-monitor-attributes-list)))) '3840)
+  (if (>= (nth 3(car(car(display-monitor-attributes-list)))) '3000)
       ;; 3840 pixels wide; this is my 4k monitor and I need a larger font
       '("Consolas"
-        :size 17
+        :size 19
         :weight normal
         :width normal
         :powerline-scale 1.1)
