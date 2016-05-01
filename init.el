@@ -46,6 +46,7 @@ values."
      c-c++
      csharp
      emacs-lisp
+     fsharp
      html
      java
      javascript
