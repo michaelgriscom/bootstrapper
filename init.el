@@ -290,9 +290,7 @@ you should place you code here."
 
             (setq exec-path (append exec-path '("c:\\msys64\\usr\\bin")))))
 
-    (setq themes-megapack-packages '(zenburn)
-          dtrt-indent-mode t ;; enable dtrt indent mode
-          )
+    (setq themes-megapack-packages '(zenburn))
 
 ;;    (setq-default indent-tabs-mode nil
 ;;                  tab-width 4
@@ -338,6 +336,8 @@ you should place you code here."
           (spacemacs/set-leader-keys "a v" 'my/toDevenv)
           (spacemacs/set-leader-keys "a s 2" 'my/msys2shell) ;; todo: launch as inferior shell in a buffer instead of cmd window
           ))
+
+    (add-hook 'prog-mode-hook '(lambda () (dtrt-indent-mode t)))
 )
 
 (defun my/dynamicfont ()
