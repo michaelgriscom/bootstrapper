@@ -185,7 +185,7 @@ else
     [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\bin\", "Machine")
 }
 
-if (Get-Command "pt.exe" -ErrorAction SilentlyContinue)
+if (Test-Path $env:USERPROFILE\bin\pt.exe -ErrorAction SilentlyContinue)
 {
     echo "This machine has pt.exe in the path"
 }
