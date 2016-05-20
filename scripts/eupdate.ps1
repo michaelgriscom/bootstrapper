@@ -206,6 +206,9 @@ if (Test-Path $serverpath)
     Set-Acl -Path $serverpath -AclObject $acl
 }
 
+echo "Refreshing PATH"
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
 
 # finally start emacs to update packages.
 # if (Test-path $env:USERPROFILE/.spacemacs.d/scripts/e.bat)
