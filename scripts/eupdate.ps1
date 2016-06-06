@@ -1,5 +1,9 @@
 #Requires -RunAsAdministrator
 
+param (
+    [switch] $dontRunAgain
+)
+
 function Expand-Zip($file, $destination)
 {
     if (Get-Command "Expand-Archive" --errorAction SilentlyContinue)
@@ -220,3 +224,9 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 #     Start-Process -FilePath "c:\emacs\bin\runemacs.exe"
 #     # & $env:USERPROFILE/.spacemacs.d/scripts/e.bat
 # }
+
+if (!$dontRunAgain)
+{
+    echo "~*~*~ Running again ~*~*~"
+    Invoke-Expression "eupdate.ps1 -dontRunAgain"
+}
