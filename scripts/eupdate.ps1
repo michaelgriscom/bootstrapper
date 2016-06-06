@@ -102,7 +102,10 @@ if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
 
     if (Test-path $env:USERPROFILE/.emacs.d/)
     {
-        echo ".emacs.d exists (spacemacs is installed)"
+        echo ".emacs.d exists (spacemacs is installed). checking for updates"
+        pushd $env:USERPROFILE/.emacs.d
+        git pull
+        popd
     }
     else
     {
