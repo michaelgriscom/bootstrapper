@@ -71,7 +71,7 @@ values."
   ;; ml - dynamically add these private layers if they exist on the local machine.
   (setq-default my-extra-configuration-layers
     '(
-        office-spacemacs
+        office
     ))
   (setq-default my-extra-configuration-layers-available (delq nil (mapcar (lambda (x) (my/layer-if-known x)) my-extra-configuration-layers)))
   (setq-default dotspacemacs-configuration-layers (append dotspacemacs-configuration-layers my-extra-configuration-layers-available))
