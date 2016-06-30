@@ -71,8 +71,7 @@ values."
   ;; ml - dynamically add these private layers if they exist on the local machine.
   (setq-default my-extra-configuration-layers
     '(
-        sourcedepot
-        office
+        office-spacemacs
     ))
   (setq-default my-extra-configuration-layers-available (delq nil (mapcar (lambda (x) (my/layer-if-known x)) my-extra-configuration-layers)))
   (setq-default dotspacemacs-configuration-layers (append dotspacemacs-configuration-layers my-extra-configuration-layers-available))
@@ -277,6 +276,7 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
+    (setq c-default-style "office-c++")
     (setq-default evil-escape-key-sequence "jk")
     (setq projectile-indexing-method 'alien)
 
