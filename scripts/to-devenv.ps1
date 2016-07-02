@@ -18,7 +18,14 @@ function Open-File-In-Devenv($file, $line, $col)
         $dte.UserControl = $true # stick around after script is done
     }
     $dte.MainWindow.Activate()
-    $dte.ItemOperations.OpenFile($file)
+    $dte.ExecuteCommand("File.OpenFile", $file)
+    $timeoutSeconds = 5
+    while ($timeoutSeconds -gt 0 -and -not $dte.ItemOperations.IsFileOpen($file))
+    {
+        Start-Sleep -Milliseconds 1000
+        $timeoutSeconds--
+    }
+
     $dte.ActiveDocument.Selection.MoveToLineAndOffset($line, $col+1)
 }
 
