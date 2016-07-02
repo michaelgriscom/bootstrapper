@@ -309,6 +309,14 @@ you should place you code here."
           (defun my/toDevenv()
             (interactive)
             (call-process-shell-command (format "powershell to-devenv.ps1 %s %s %s" buffer-file-name (count-lines 1 (point)) (current-column)) nil 0))
+          (defun my/fromDevenv()
+            (interactive)
+            (setq my//from-devenv-result (split-string (shell-command-to-string "powershell from-devenv.ps1") ","))
+            (find-file (nth 0 my//from-devenv-result)) ; filename
+            (goto-line (string-to-number (nth 1 my//from-devenv-result))) ; line num
+            (evil-goto-column (string-to-number(nth 2 my//from-devenv-result)))) ; column. todo: see if this works in holy mode.
+
+
           (defun my/msys2shell()
             (interactive)
             (let ((explicit-shell-file-name "C:/msys64/usr/bin/bash.exe"))
@@ -334,6 +342,7 @@ you should place you code here."
         (progn
           (spacemacs/set-leader-keys "a e" 'my/windowsExplorer)
           (spacemacs/set-leader-keys "a v" 'my/toDevenv)
+          (spacemacs/set-leader-keys "a V" 'my/fromDevenv)
           (spacemacs/set-leader-keys "a s 2" 'my/msys2shell) ;; todo: launch as inferior shell in a buffer instead of cmd window
           ))
 
