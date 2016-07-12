@@ -24,35 +24,27 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     auto-completion
-     better-defaults
-     chrome
-     colors
-     cscope
-     emoji
-     git
-     markdown
-     ;; org
-     (shell :variables
-     shell-default-height 30
-     shell-default-position 'bottom)
-     ;; spell-checking
-     windows-scripts
-     syntax-checking
-     games
-     semantic
-     ;; version-control
-     ;; languages
+	 auto-completion
      c-c++
-     csharp
+	 cscope
      emacs-lisp
-     fsharp
+     git
      html
-     java
      javascript
-     markdown
-     python
-     shell-scripts
+	 markdown
+     office
+     org
+     (shell :variables
+             shell-default-height 30
+             shell-default-position 'bottom)
+     ranger
+     search-engine
+	 semantic
+	 shell-scripts
+     syntax-checking
+     version-control
+
+     windows-scripts
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -103,7 +95,7 @@ values."
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'emacs
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -116,7 +108,7 @@ values."
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
-   dotspacemacs-startup-lists '(recents projects bookmarks)
+   dotspacemacs-startup-lists '(recents projects)
    ;; Number of recent files to show in the startup buffer. Ignored if
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
    dotspacemacs-startup-recent-list-size 5
@@ -125,23 +117,27 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(monokai
+   dotspacemacs-themes '(spacemacs-dark
+                         monokai
                          spacemacs-light
-                         zenburn
-                         spacemacs-dark
                          solarized-light
                          solarized-dark
-                         leuven)
+                         leuven
+                         zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font (my/dynamicfont)
+   dotspacemacs-default-font '("Consolas"
+                               :size 13
+                               :weight normal
+                               :width normal
+                               :powerline-scale 1.1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
    ;; (default "M-m")
-   dotspacemacs-emacs-leader-key "M-m"
+   dotspacemacs-emacs-leader-key "<apps>"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
    dotspacemacs-major-mode-leader-key ","
@@ -275,9 +271,17 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
+  (cua-mode 1)
+  (global-set-key [f6] 'delete-window)
+  (global-set-key [f7] 'split-window-horizontally)
+  (global-set-key [f8] 'split-window-vertically)
+  (global-set-key [f9] 'delete-other-windows)
+  (global-set-key (kbd "C-w") 'kill-this-buffer)
+  (global-set-key (kbd "C-o") 'helm-find-files)
+  (global-set-key (kbd "C-x C-b") 'helm-mini)
+  (global-set-key (kbd "C-t") 'shell)
+  (global-set-key (kbd "C-l") 'goto-line)
 
-    (setq c-default-style "office-c++")
-    (setq-default evil-escape-key-sequence "jk")
     (setq projectile-indexing-method 'alien)
 
     ;; windows only environment stuff
@@ -289,16 +293,6 @@ you should place you code here."
                 (getenv "PATH")))
 
             (setq exec-path (append exec-path '("c:\\msys64\\usr\\bin")))))
-
-    (setq themes-megapack-packages '(zenburn))
-
-;;    (setq-default indent-tabs-mode nil
-;;                  tab-width 4
-;;                  c-basic-offset 4
-;;                  evil-shift-width 4
-;;                  evil-visual-state-cursor 'box
-;;                  evil-insert-state-cursor 'bar
-;;                  evil-emacs-state-cursor 'hbar)
 
     ;; Extra functions on Windows
     (if (eq system-type 'windows-nt)
@@ -329,14 +323,6 @@ you should place you code here."
           (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
           ))
 
-    ;; extra keybindings when eyebrowse is enabled
-    ;;(spacemacs/set-leader-keys "TAB" 'spacemacs/workspaces-micro-state)
-    ;;(spacemacs/set-leader-keys "b TAB" 'evil-switch-to-windows-last-buffer)
-
-    ;; zoom
-    (global-set-key (kbd "C--") 'spacemacs/zoom-frm-out)
-    (global-set-key (kbd "C-=") 'spacemacs/zoom-frm-in)
-
     ;; windows only bindings
     (if (eq system-type 'windows-nt)
         (progn
@@ -347,25 +333,6 @@ you should place you code here."
           ))
 
     (add-hook 'prog-mode-hook '(lambda () (dtrt-indent-mode t)))
-)
-
-(defun my/dynamicfont ()
-  ;; set text size according to screen resolution
-  (if (>= (nth 3(car(car(display-monitor-attributes-list)))) '3000)
-      ;; 3840 pixels wide; this is my 4k monitor and I need a larger font
-      '("Consolas"
-        :size 19
-        :weight normal
-        :width normal
-        :powerline-scale 1.1)
-
-      ;; default to this
-      '("Consolas"
-        :size 12
-        :weight normal
-        :width normal
-        :powerline-scale 1.1)
-  )
 )
 
 (defun my/layer-if-known (layername)
