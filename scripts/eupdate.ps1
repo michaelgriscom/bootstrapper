@@ -95,11 +95,11 @@ if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
     {
         echo ".spacemacs.d doesn't exist. cloning from my github"
         pushd $env:USERPROFILE
-        git clone git@github.com:mjlim/.spacemacs.d.git
+        git clone git@github.com:michaelgriscom/.spacemacs.d.git
         if (!(Test-path $env:USERPROFILE/.spacemacs.d/))
         {
             echo "cloning failed. falling back to https clone"
-            git clone https://github.com/mjlim/.spacemacs.d.git
+            git clone https://github.com/michaelgriscom/.spacemacs.d.git
         }
         popd
     }
