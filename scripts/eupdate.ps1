@@ -1,84 +1,25 @@
-#Requires -RunAsAdministrator
+#requires -version 4.0
+#requires -RunAsAdministrator
 
 param (
-    [switch] $dontRunAgain
+    [switch] $dev,
+    [switch] $full
 )
 
-function Expand-Zip($file, $destination)
+function Refresh-Env()
 {
-    if (Get-Command "Expand-Archive" --errorAction SilentlyContinue)
+    refreshenv
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+}
+
+function Configure-Git()
+{
+    if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue))
     {
-        Expand-Archive $file -dest $destination
+       Write-Warning "Couldn't find git."
+       return
     }
-    else
-    {
-        $shell = New-Object -com shell.application
-        $zip = $shell.NameSpace($file)
-        foreach ($item in $zip.items())
-        {
-            $shell.NameSpace($destination).copyhere($item)
-        }
-    }
-}
 
-function Msys2-Install-Package-If-File-Missing($package, $file)
-{
-    if (Test-Path "c:\msys64\usr\bin\$file")
-    {
-        echo "msys2 has $package installed"
-    }
-    else
-    {
-        echo "msys2 doesn't have $package installed, installing package using pacman."
-        C:\msys64\usr\bin\bash.exe --login -c "pacman -S --noconfirm $package"
-    }
-}
-
-if (!$env:HOME) # emacs looks here to pull in the spacemacs config.
-{
-    echo "Setting HOME environment variable to $env:USERPROFILE"
-    [Environment]::SetEnvironmentVariable("HOME", $env:USERPROFILE, "Machine")
-}
-else
-{
-    echo "HOME environment variable already exists and is $env:HOME"
-}
-
-if (Test-Path c:\msys64)
-{
-    echo "This machine has msys2 installed in c:\msys64"
-}
-else
-{
-    echo "This machine doesn't have msys2 installed in c:\msys64, getting the installer"
-    wget http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20160205.exe -outfile $env:temp\msys2.exe
-    Start-Process -FilePath "$env:temp\msys2.exe"
-}
-
-if (Test-Path c:\msys64)
-{
-    echo "Since msys2 is installed, making sure it has all the packages needed."
-    Msys2-Install-Package-If-File-Missing "cscope" "cscope.exe";
-    Msys2-Install-Package-If-File-Missing "openssh" "ssh.exe";
-    Msys2-Install-Package-If-File-Missing "dos2unix" "dos2unix.exe";
-    Msys2-Install-Package-If-File-Missing "git" "git.exe";
-
-    if (!(Test-Path c:\msys64\etc\nsswitch.conf.bak))
-    {
-        echo "Patching mysys2/etc/nsswitch.conf so ssh can use profile/.ssh"
-        Copy-Item c:\msys64\etc\nsswitch.conf c:\msys64\etc\nsswitch.conf.bak
-        Get-Content c:\msys64\etc\nsswitch.conf.bak | Foreach-Object {$_ -replace '^db_home.*$', "db_home: windows cygwin desc"} | Out-File c:\msys64\etc\nsswitch.conf
-        C:\msys64\usr\bin\dos2unix.exe c:\msys64\etc\nsswitch.conf
-    }
-}
-else
-{
-    echo "Not doing anything with msys2 packages since it doesn't appear to be installed at this time."
-}
-
-
-if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
-{
     echo "This machine has git. Configuring for performance on Windows."
     git config --global core.preloadindex true
     git config --global core.fscache true
@@ -117,116 +58,95 @@ if (Get-Command "git.exe" -ErrorAction SilentlyContinue)
         pushd $env:USERPROFILE
         git clone https://github.com/syl20bnr/spacemacs .emacs.d
         popd
+
+        # fix emacs.d/server identity for the hell of it (could be broken on some machines)
+        $serverpath = "$env:USERPROFILE/.emacs.d/server"
+        if (Test-Path $serverpath)
+        {
+            $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+            $acl = Get-ACL $serverpath
+            $acl.SetOwner($user.User)
+            Set-Acl -Path $serverpath -AclObject $acl
+        }
     }
 }
-else
+
+function Configure-Env()
 {
-    echo "This machine doesn't have git."
-    if (Test-Path "c:\msys64\usr\bin\git.exe")
+    if (!$env:HOME) # emacs looks here to pull in the spacemacs config.
     {
-        echo "But git.exe was found in msys2. Adding msys2 bin to path..."
-        [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";c:\msys64\usr\bin\", "Machine")
-        echo "Run this script again. (tl;dr: lazy scripting)"
+        echo "Setting HOME environment variable to $env:USERPROFILE"
+        [Environment]::SetEnvironmentVariable("HOME", $env:USERPROFILE, "Machine")
     }
     else
     {
-        echo "Install git from somewhere & make sure it's in the path."
+        echo "HOME environment variable already exists and is $env:HOME"
     }
-    Exit
+
+    if (Get-Command "e.bat" -ErrorAction SilentlyContinue)
+    {
+        echo "This machine has e.bat in the path"
+    }
+    else
+    {
+        echo "Adding scripts to path"
+        [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\.spacemacs.d\scripts\", "Machine")
+    }
+
+    if (Test-Path $env:USERPROFILE\bin\)
+    {
+        echo "This machine has a local bin directory in the path"
+    }
+    else
+    {
+        echo "This machine does not have a local bin directory in the path. Creating & adding to path."
+        mkdir $env:USERPROFILE\bin\
+        [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\bin\", "Machine")
+    }
 }
 
-# check that emacs is on this pc
-if (Test-Path c:\emacs)
+Set-ExecutionPolicy unrestricted
+
+if (!(Get-Command "choco.exe" -ErrorAction SilentlyContinue))
 {
-    #ok
-    echo "This machine has emacs installed."
-}
-else
-{
-    echo "This machine doesn't have emacs installed; getting it & installing to c:\emacs"
-    wget http://d.mjlim.net/~mikel/emacs.zip -outfile $env:temp\emacs.zip
-    Expand-Zip $env:temp\emacs.zip c:\
+    echo "Installing Chocolatey"
+    iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+    refreshenv
 }
 
-# check regkey to turn off scaling
-$layerspath = "hklm:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers\"
-# create it if it doesn't exist.
-if(!(Test-Path $layerspath))
+echo "Installing/Updating Chocolatey packages"
+
+echo "Adding core apps"
+choco upgrade pt -y
+choco upgrade emacs64 -y
+choco upgrade git -y -params '"/GitAndUnixToolsOnPath"'
+choco upgrade -y googlechrome
+choco upgrade -y paint.net
+choco upgrade -y spotify
+choco upgrade -y notepadplusplus
+choco upgrade -y everything
+
+if($dev -or $full)
 {
-    echo "This machine doesn't have the AppCompatFlags\Layers key, creating it."
-    New-Item -Path $layerspath -Force
+    echo "Adding dev tools"
+    choco upgrade -y sysinternals
+    choco upgrade -y fiddler4
+    choco upgrade -y sourcetree
+    choco upgrade -y visualstudio2015enterprise
+    choco upgrade -y resharper
+    choco upgrade -y winmerge
 }
 
-$layers = Get-Item $layerspath
-
-if ($layers.GetValueNames().Contains("c:\emacs\bin\emacs.exe"))
+if($full)
 {
-    echo "This machine has the highdpi aware registry flags set on the emacs exes."
-}
-else
-{
-    echo "This machine doesn't have the highdpi aware registry flags set on the emacs exes, setting them..."
-    $layers | New-ItemProperty -name "c:\emacs\bin\emacs.exe" -value "~ HIGHDPIAWARE"
-    $layers | New-ItemProperty -name "c:\emacs\bin\runemacs.exe" -value "~ HIGHDPIAWARE"
-    echo "if that failed, try again as admin."
+    echo "Adding misc tools"
+    choco upgrade winrar -y   
+    # f.lux
+    # nodejs
+    # lessmsi
 }
 
-if (Get-Command "e.bat" -ErrorAction SilentlyContinue)
-{
-    echo "This machine has e.bat in the path"
-}
-else
-{
-    echo "Adding scripts to path"
-    [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\.spacemacs.d\scripts\", "Machine")
-}
-
-if (Test-Path $env:USERPROFILE\bin\)
-{
-    echo "This machine has a local bin directory in the path"
-}
-else
-{
-    echo "This machine does not have a local bin directory in the path. Creating & adding to path."
-    mkdir $env:USERPROFILE\bin\
-    [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\bin\", "Machine")
-}
-
-if (Test-Path $env:USERPROFILE\bin\pt.exe -ErrorAction SilentlyContinue)
-{
-    echo "This machine has pt.exe in the path"
-}
-else
-{
-    echo "This machine doesn't have pt.exe, getting it."
-    wget https://github.com/monochromegane/the_platinum_searcher/releases/download/v2.1.1/pt_windows_amd64.zip -outfile $env:temp\pt.zip
-    Expand-Zip $env:temp\pt.zip $env:USERPROFILE\bin\
-}
-
-# fix emacs.d/server identity for the hell of it (could be broken on some machines)
-$serverpath = "$env:USERPROFILE/.emacs.d/server"
-if (Test-Path $serverpath)
-{
-    $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-    $acl = Get-ACL $serverpath
-    $acl.SetOwner($user.User)
-    Set-Acl -Path $serverpath -AclObject $acl
-}
-
-echo "Refreshing PATH"
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-
-
-# finally start emacs to update packages.
-# if (Test-path $env:USERPROFILE/.spacemacs.d/scripts/e.bat)
-# {
-#     # load runemacs.exe since for some reason that makes windows start honoring the dpi flag regkeys???
-#     Start-Process -FilePath "c:\emacs\bin\runemacs.exe"
-#     # & $env:USERPROFILE/.spacemacs.d/scripts/e.bat
-# }
-
-if (!$dontRunAgain)
-{
-    echo "~*~*~ Running again ~*~*~"
-    Invoke-Expression "eupdate.ps1 -dontRunAgain"
-}
+echo "Configuring some things"
+Refresh-Env
+Configure-Git
+Configure-Env
