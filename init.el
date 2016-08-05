@@ -281,8 +281,9 @@ you should place you code here."
   (global-set-key (kbd "C-x C-b") 'helm-mini)
   (global-set-key (kbd "C-t") 'shell)
   (global-set-key (kbd "C-l") 'goto-line)
+  (global-set-key (kbd "C-a") 'mark-whole-buffer)
 
-    (setq projectile-indexing-method 'alien)
+  (setq projectile-indexing-method 'alien)
 
     ;; windows only environment stuff
     (if (eq system-type 'windows-nt)
