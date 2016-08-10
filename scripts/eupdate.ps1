@@ -91,6 +91,7 @@ function Configure-Env()
     {
         echo "Adding scripts to path"
         [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\.spacemacs.d\scripts\", "Machine")
+        Refresh-Env
     }
 
     if (Test-Path $env:USERPROFILE\bin\)
@@ -102,51 +103,76 @@ function Configure-Env()
         echo "This machine does not have a local bin directory in the path. Creating & adding to path."
         mkdir $env:USERPROFILE\bin\
         [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\bin\", "Machine")
+        Refresh-Env
     }
 }
 
+function Set-File-Associations()
+{
+    ftype txtfile=emacsclientw -na runemacs "%1"
+    ftype EmacsLisp=emacsclientw -na runemacs "%1"
+    ftype CodeFile=emacsclientw -na runemacs "%1"
+    assoc .txt=txtfile
+    assoc .text=txtfile
+    assoc .log=txtfile
+    assoc .el=EmacsLisp
+    assoc .c=CodeFile
+    assoc .h=CodeFile
+}
+
+function Update-Chocolatey-Packages()
+{
+    if (!(Get-Command "choco.exe" -ErrorAction SilentlyContinue))
+    {
+        echo "Installing Chocolatey"
+        iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+        refreshenv
+    }
+
+    echo "Installing/Updating Chocolatey packages"
+
+    echo "Adding core apps"
+    choco upgrade pt -y
+    choco upgrade emacs64 -y
+    choco upgrade git -y -params '"/GitAndUnixToolsOnPath"'
+    choco upgrade -y googlechrome
+    choco upgrade -y paint.net
+    choco upgrade -y spotify
+    choco upgrade -y notepadplusplus
+    choco upgrade -y everything
+
+    if($dev -or $full)
+    {
+        echo "Adding dev tools"
+        choco upgrade -y sysinternals
+        choco upgrade -y fiddler4
+        choco upgrade -y sourcetree
+        choco upgrade -y visualstudio2015enterprise
+        choco upgrade -y resharper
+        choco upgrade -y winmerge
+    }
+
+    if($full)
+    {
+        echo "Adding misc tools"
+        choco upgrade winrar -y   
+        # f.lux
+        # nodejs
+        # lessmsi
+    }
+}
+
+function Configure-Reg()
+{
+    echo "Adding emacs shell integration"
+    regedit /s openwemacs.reg # doing reg operations through PS is way slower than just running this
+}
+
 Set-ExecutionPolicy unrestricted
-
-if (!(Get-Command "choco.exe" -ErrorAction SilentlyContinue))
-{
-    echo "Installing Chocolatey"
-    iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
-    refreshenv
-}
-
-echo "Installing/Updating Chocolatey packages"
-
-echo "Adding core apps"
-choco upgrade pt -y
-choco upgrade emacs64 -y
-choco upgrade git -y -params '"/GitAndUnixToolsOnPath"'
-choco upgrade -y googlechrome
-choco upgrade -y paint.net
-choco upgrade -y spotify
-choco upgrade -y notepadplusplus
-choco upgrade -y everything
-
-if($dev -or $full)
-{
-    echo "Adding dev tools"
-    choco upgrade -y sysinternals
-    choco upgrade -y fiddler4
-    choco upgrade -y sourcetree
-    choco upgrade -y visualstudio2015enterprise
-    choco upgrade -y resharper
-    choco upgrade -y winmerge
-}
-
-if($full)
-{
-    echo "Adding misc tools"
-    choco upgrade winrar -y   
-    # f.lux
-    # nodejs
-    # lessmsi
-}
-
+Update-Chocolatey-Packages
 echo "Configuring some things"
 Refresh-Env
 Configure-Git
 Configure-Env
+#Set-File-Associations
+Refresh-Env
