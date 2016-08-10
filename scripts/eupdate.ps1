@@ -107,19 +107,6 @@ function Configure-Env()
     }
 }
 
-function Set-File-Associations()
-{
-    ftype txtfile=emacsclientw -na runemacs "%1"
-    ftype EmacsLisp=emacsclientw -na runemacs "%1"
-    ftype CodeFile=emacsclientw -na runemacs "%1"
-    assoc .txt=txtfile
-    assoc .text=txtfile
-    assoc .log=txtfile
-    assoc .el=EmacsLisp
-    assoc .c=CodeFile
-    assoc .h=CodeFile
-}
-
 function Update-Chocolatey-Packages()
 {
     if (!(Get-Command "choco.exe" -ErrorAction SilentlyContinue))
@@ -174,5 +161,5 @@ echo "Configuring some things"
 Refresh-Env
 Configure-Git
 Configure-Env
-#Set-File-Associations
+Configure-Reg
 Refresh-Env
