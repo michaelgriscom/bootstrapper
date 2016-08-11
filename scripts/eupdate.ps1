@@ -9,7 +9,7 @@ param (
 function Refresh-Env()
 {
     refreshenv
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 }
 
 function Configure-Git()
@@ -123,7 +123,6 @@ function Update-Chocolatey-Packages()
     choco upgrade emacs64 -y
     choco upgrade git -y -params '"/GitAndUnixToolsOnPath"'
     choco upgrade -y googlechrome
-    choco upgrade -y paint.net
     choco upgrade -y spotify
     choco upgrade -y notepadplusplus
     choco upgrade -y everything
@@ -142,7 +141,8 @@ function Update-Chocolatey-Packages()
     if($full)
     {
         echo "Adding misc tools"
-        choco upgrade winrar -y   
+        choco upgrade winrar -y
+        choco upgrade -y paint.net
         # f.lux
         # nodejs
         # lessmsi
@@ -151,9 +151,15 @@ function Update-Chocolatey-Packages()
 
 function Configure-Reg()
 {
+    # during testing, reg operations through PS were strangely way slower than just running reg files
+
     echo "Adding emacs shell integration"
     $regLoc = $env:USERPROFILE + "\.spacemacs.d\scripts\openwemacs.reg"
-    regedit /s $regLoc # doing reg operations through PS is way slower than just running this
+    regedit /s $regLoc
+
+    echo "Customizing explorer options"
+    $regLoc = $env:USERPROFILE + "\.spacemacs.d\scripts\explorerconfig.reg"
+    regedit /s $regLoc
 }
 
 Set-ExecutionPolicy unrestricted
