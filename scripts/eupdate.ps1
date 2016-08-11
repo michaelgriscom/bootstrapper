@@ -152,7 +152,8 @@ function Update-Chocolatey-Packages()
 function Configure-Reg()
 {
     echo "Adding emacs shell integration"
-    regedit /s openwemacs.reg # doing reg operations through PS is way slower than just running this
+    $regLoc = $env:USERPROFILE + "\.spacemacs.d\scripts\openwemacs.reg"
+    regedit /s $regLoc # doing reg operations through PS is way slower than just running this
 }
 
 Set-ExecutionPolicy unrestricted
