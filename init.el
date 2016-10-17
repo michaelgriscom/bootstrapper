@@ -19,19 +19,14 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
-	 auto-completion
-     c-c++
-	 cscope
+     auto-completion
+     c-c++-
+     cscope
      emacs-lisp
      git
      html
      javascript
-	 markdown
+     markdown
      office
      org
      (shell :variables
@@ -39,11 +34,10 @@ values."
              shell-default-position 'bottom)
      ranger
      search-engine
-	 semantic
-	 shell-scripts
+     semantic
+     shell-scripts
      syntax-checking
      version-control
-
      windows-scripts
      )
    ;; List of additional packages that will be installed without being
