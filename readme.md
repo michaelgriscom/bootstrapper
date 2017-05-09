@@ -1,13 +1,12 @@
-my spacemacs config & setup file
+Machine setup script
 =========================================
 
-spacemacs config plus a powershell script to make sure everything's in place
+Powershell script to set up a machine, along with a spacemacs configuration
 
-
-setup (windows)
+Setup (windows)
 ======
 paste this into an admin powershell
 
     set-executionpolicy unrestricted
-    wget https://raw.githubusercontent.com/michaelgriscom/.spacemacs.d/master/scripts/eupdate.ps1 -outfile $env:temp/emacsbootstrap.ps1
-    invoke-expression $env:temp/emacsbootstrap.ps1
+    wget https://raw.githubusercontent.com/michaelgriscom/bootstrapper/master/scripts/eupdate.ps1 -outfile $env:temp/bootstrapper.ps1
+    invoke-expression $env:temp/bootstrapper.ps1
