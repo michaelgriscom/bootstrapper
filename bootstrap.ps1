@@ -12,19 +12,8 @@ function Refresh-Env()
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 }
 
-function Configure-Git()
+function Clone-Repos()
 {
-    if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue))
-    {
-       Write-Warning "Couldn't find git."
-       return
-    }
-
-    echo "This machine has git. Configuring for performance on Windows."
-    git config --global core.preloadindex true
-    git config --global core.fscache true
-    git config --global gc.auto 256
-
     if (Test-path $env:USERPROFILE/.spacemacs.d/)
     {
         echo ".spacemacs.d exists. updating it..."
@@ -34,7 +23,7 @@ function Configure-Git()
     }
     else
     {
-        echo ".spacemacs.d doesn't exist. cloning from my github"
+        echo ".spacemacs.d doesn't exist. cloning from github"
         pushd $env:USERPROFILE
         git clone git@github.com:michaelgriscom/.spacemacs.d.git
         if (!(Test-path $env:USERPROFILE/.spacemacs.d/))
@@ -71,6 +60,22 @@ function Configure-Git()
     }
 }
 
+function Configure-Git()
+{
+    if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue))
+    {
+       Write-Warning "Couldn't find git."
+       return
+    }
+
+    echo "This machine has git. Configuring for performance on Windows."
+    git config --global core.preloadindex true
+    git config --global core.fscache true
+    git config --global gc.auto 256
+
+    Clone-Repos
+}
+
 function Configure-Env()
 {
     if (!$env:HOME) # emacs looks here to pull in the spacemacs config.
@@ -90,7 +95,7 @@ function Configure-Env()
     else
     {
         echo "Adding scripts to path"
-        [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\.spacemacs.d\scripts\", "Machine")
+        [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $env:USERPROFILE + "\bootstrapper\bin\", "Machine")
         Refresh-Env
     }
 
@@ -126,6 +131,8 @@ function Update-Chocolatey-Packages()
     choco upgrade -y spotify
     choco upgrade -y notepadplusplus
     choco upgrade -y everything
+    choco upgrade -y powershell-packagemanagement
+    choco upgrade -y microsoft-teams
 
     if($dev -or $full)
     {
@@ -143,9 +150,27 @@ function Update-Chocolatey-Packages()
         echo "Adding misc tools"
         choco upgrade winrar -y
         choco upgrade -y paint.net
-        # f.lux
-        # nodejs
-        # lessmsi
+    }
+}
+
+function Configure-PS()
+{
+    if (!(Get-Command "PSReadline" -ErrorAction SilentlyContinue)){
+        echo "PSReadline not found. Trying to install it."
+        Install-Package PSReadline
+    }
+}
+
+function Fix-Emacs()
+{
+    # fix emacs.d/server identity
+    $serverpath = "$env:USERPROFILE/.emacs.d/server"
+    if (Test-Path $serverpath)
+    {
+        $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+        $acl = Get-ACL $serverpath
+        $acl.SetOwner($user.User)
+        Set-Acl -Path $serverpath -AclObject $acl
     }
 }
 
@@ -154,11 +179,11 @@ function Configure-Reg()
     # during testing, reg operations through PS were strangely way slower than just running reg files
 
     echo "Adding emacs shell integration"
-    $regLoc = $env:USERPROFILE + "\.spacemacs.d\scripts\openwemacs.reg"
+    $regLoc = $env:USERPROFILE + "\bootstrapper\scripts\openwemacs.reg"
     regedit /s $regLoc
 
     echo "Customizing explorer options"
-    $regLoc = $env:USERPROFILE + "\.spacemacs.d\scripts\explorerconfig.reg"
+    $regLoc = $env:USERPROFILE + "\bootstrapper\scripts\explorerconfig.reg"
     regedit /s $regLoc
 }
 
@@ -166,7 +191,9 @@ Set-ExecutionPolicy unrestricted
 Update-Chocolatey-Packages
 echo "Configuring some things"
 Refresh-Env
+Configure-PS
 Configure-Git
 Configure-Env
 Configure-Reg
+Fix-Emacs
 Refresh-Env
