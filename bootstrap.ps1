@@ -131,7 +131,6 @@ function Update-Chocolatey-Packages()
     choco upgrade -y spotify
     choco upgrade -y notepadplusplus
     choco upgrade -y everything
-    choco upgrade -y powershell-packagemanagement
     choco upgrade -y microsoft-teams
 
     if($dev -or $full)
@@ -174,17 +173,88 @@ function Fix-Emacs()
     }
 }
 
+# Enable Remote Desktop w/o Network Level Authentication
+Function EnableRemoteDesktop {
+	Write-Host "Enabling Remote Desktop w/o Network Level Authentication..."
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Type DWord -Value 0
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Type DWord -Value 0
+}
+
+# Show Task Manager details
+Function ShowTaskManagerDetails {
+	Write-Host "Showing task manager details..."
+	If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager")) {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Force | Out-Null
+	}
+	$preferences = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -ErrorAction SilentlyContinue
+	If (!($preferences)) {
+		$taskmgr = Start-Process -WindowStyle Hidden -FilePath taskmgr.exe -PassThru
+		While (!($preferences)) {
+			Start-Sleep -m 250
+			$preferences = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -ErrorAction SilentlyContinue
+		}
+		Stop-Process $taskmgr
+	}
+	$preferences.Preferences[28] = 0
+	Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -Type Binary -Value $preferences.Preferences
+}
+
+# Show file operations details
+Function ShowFileOperationsDetails {
+	Write-Host "Showing file operations details..."
+	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager")) {
+		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" | Out-Null
+	}
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" -Name "EnthusiastMode" -Type DWord -Value 1
+}
+
+# Show known file extensions
+Function ShowKnownExtensions {
+	Write-Host "Showing known file extensions..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Type DWord -Value 0
+}
+
+# Show hidden files
+Function ShowHiddenFiles {
+	Write-Host "Showing hidden files..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Type DWord -Value 1
+}
+
+# Change default Explorer view to This PC
+Function ExplorerThisPC {
+	Write-Host "Changing default Explorer view to This PC..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "LaunchTo" -Type DWord -Value 1
+}
+
+# Install Linux Subsystem - Applicable to RS1 or newer
+Function InstallLinuxSubsystem {
+	Write-Host "Installing Linux Subsystem..."
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Type DWord -Value 1
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowAllTrustedApps" -Type DWord -Value 1
+	Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -NoRestart -WarningAction SilentlyContinue | Out-Null
+}
+
+Function DisableShaking {
+	Write-Host "Disabling shaking..."
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "DisallowShaking" -Type DWord -Value 1
+}
+
+Function DisableQuickEdit {
+	Write-Host "Disabling quick edit..."
+	Set-ItemProperty -Path "HKCU:\Console" -Name "QuickEdit" -Type DWord -Value 0
+}
+
 function Configure-Reg()
 {
-    # during testing, reg operations through PS were strangely way slower than just running reg files
-
-    echo "Adding emacs shell integration"
-    $regLoc = $env:USERPROFILE + "\bootstrapper\scripts\openwemacs.reg"
-    regedit /s $regLoc
-
-    echo "Customizing explorer options"
-    $regLoc = $env:USERPROFILE + "\bootstrapper\scripts\explorerconfig.reg"
-    regedit /s $regLoc
+	EnableRemoteDesktop
+	ShowTaskManagerDetails
+	ShowFileOperationsDetails
+	ShowKnownExtensions
+	ShowHiddenFiles
+	DisableShaking
+	DisableQuickEdit
+	ExplorerThisPC
+	# InstallLinuxSubsystem
 }
 
 Set-ExecutionPolicy unrestricted

@@ -8,5 +8,5 @@ Setup (windows)
 paste this into an admin powershell
 
     set-executionpolicy unrestricted
-    wget https://raw.githubusercontent.com/michaelgriscom/bootstrapper/master/scripts/eupdate.ps1 -outfile $env:temp/bootstrapper.ps1
-    invoke-expression $env:temp/bootstrapper.ps1
+	wget https://raw.githubusercontent.com/michaelgriscom/bootstrapper/master/bootstrap.ps1 -outfile $env:temp/bootstrap.ps1
+	invoke-expression $env:temp/bootstrap.ps1
