@@ -74,7 +74,7 @@ ForEach ($package in $script:packages)
     echo "Updating package: $($package.packagename)"
     if ($package.packagename -match '\.ps1')
     {
-        echo "$($package.packagename) ends with .ps1, running the script"
+        echo "Executing: $($package.packagename)"
         # replace packagename
         $package.packagename = ($package.packagename -replace '\.ps1', '')
         Run-Script-Package $package
