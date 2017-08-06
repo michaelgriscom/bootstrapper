@@ -1,0 +1,18 @@
+packagename,params
+pt,
+emacs64,
+git,"""/GitOnlyOnPath"""
+everything,
+nvm,
+gitextensions,
+7zip,
+git-credential-manager-for-windows,
+sysinternals,
+heatseeker,
+switcheroo,
+googlechrome,
+spotify,
+notepadplusplus,
+microsoft-teams,
+visualstudiocode,"""/NoDesktopIcon /NoQuicklaunchIcon"""
+explorerConfig.ps1,
