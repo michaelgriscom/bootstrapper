@@ -33,7 +33,7 @@ if (!(test-path $bootstrapperPath))
     New-Item $bootstrapperPath -ItemType Directory
 
     pushd $bootstrapperPath
-    git clone https://github.com/michaelgriscom/bootstrapper.git
+    git clone https://github.com/michaelgriscom/bootstrapper.git .
     popd
 }
 
