@@ -20,25 +20,9 @@ function Load-Packages()
     }
 }
 
-function Update-Choco-Package($package)
-{
-    echo "Outdated package: $($package.packagename) updating..."
-
-    choco upgrade -y $package.packagename --allowEmptyChecksums --limit-output
-}
-
 function Install-Choco-Package($package)
 {
-    # if the package is installed, then it should already be up to date; otherwise we must install it
-    $packageIsInstalled = choco info $($package.packagename) -ne $null
-    if ($packageIsInstalled)
-    {
-        Update-Choco-Package $package
-        return
-    }
-
-    echo "Package not found: $($package.packagename) installing..."
-    choco install -y $package.packagename --allowEmptyChecksums --limit-output
+    choco upgrade -y $package.packagename -params $package.params --allowEmptyChecksums --limit-output
     Run-Script-Package $package "-onInstall"
 }
 
@@ -67,12 +51,9 @@ if ($gitExitCode -ne 0)
     Exit 1
 }
 
-# echo "Updating chocolatey packages"
-#choco upgrade all -y --allowEmptyChecksums --limit-output
-
 ForEach ($package in $script:packages)
 {
-    echo "Updating package: $($package.packagename)"
+    echo "Installing/updating package: $($package.packagename)"
     if ($package.packagename -match '\.ps1')
     {
         echo "Executing: $($package.packagename)"
@@ -83,6 +64,5 @@ ForEach ($package in $script:packages)
     else
     {
         Install-Choco-Package $package
-        Run-Script-Package $package "-onUpdate"
     }
 }

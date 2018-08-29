@@ -76,6 +76,25 @@ Function DisableQuickEdit
 	Set-ItemProperty -Path "HKCU:\Console" -Name "QuickEdit" -Type DWord -Value 0
 }
 
+Function Configure-TaskBar
+{
+    Write-Host "Configuring TaskBar..."
+    # hide search bar
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbar" -Type DWord -Value 0
+    # hide taskview
+    If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\MultiTaskingView"))
+    {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\MultiTaskingView" | Out-Null
+	}
+    If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\MultiTaskingView\AllUpView"))
+    {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\MultiTaskingView\AllUpView" | Out-Null
+	}
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\MultiTaskingView\AllUpView" -Name "Enabled" -Type DWord -Value 0
+    # hide people button
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWord -Value 0
+}
+
 EnableRemoteDesktop
 ShowTaskManagerDetails
 ShowFileOperationsDetails
@@ -84,3 +103,4 @@ ShowHiddenFiles
 DisableShaking
 DisableQuickEdit
 ExplorerThisPC
+Configure-TaskBar

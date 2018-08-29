@@ -1,12 +1,11 @@
 packagename,params
 pt,
-emacs64,
 git,"""/GitOnlyOnPath"""
 everything,
-nvm,
 gitextensions,
 7zip,
 git-credential-manager-for-windows,
+gitkraken,
 sysinternals,
 heatseeker,
 switcheroo,
@@ -14,5 +13,5 @@ googlechrome,
 spotify,
 notepadplusplus,
 microsoft-teams,
-visualstudiocode,"""/NoDesktopIcon /NoQuicklaunchIcon"""
+vscode,"""/NoDesktopIcon /NoQuicklaunchIcon"""
 explorerConfig.ps1,
