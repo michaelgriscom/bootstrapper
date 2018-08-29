@@ -26,7 +26,7 @@ if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue))
     }
 }
 
-$bootstrapperPath = "c:\git\bootstrapper"
+$bootstrapperPath = "c:\git"
 
 if (!(test-path $bootstrapperPath))
 {
@@ -37,4 +37,4 @@ if (!(test-path $bootstrapperPath))
     popd
 }
 
-Invoke-Expression $bootstrapperPath/setup-packages.ps1
+Invoke-Expression $bootstrapperPath/bootstrapper/setup-packages.ps1

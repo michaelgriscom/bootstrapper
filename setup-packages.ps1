@@ -33,6 +33,7 @@ function Install-Choco-Package($package)
     $packageIsInstalled = choco info $($package.packagename) -ne $null
     if ($packageIsInstalled)
     {
+        Update-Choco-Package $package
         return
     }
 
@@ -66,8 +67,8 @@ if ($gitExitCode -ne 0)
     Exit 1
 }
 
-echo "Updating chocolatey packages"
-choco upgrade all -y --allowEmptyChecksums --limit-output
+# echo "Updating chocolatey packages"
+#choco upgrade all -y --allowEmptyChecksums --limit-output
 
 ForEach ($package in $script:packages)
 {
