@@ -22,7 +22,6 @@
 #
 # For more definitions, see the files in C:\Program Files\WinCompose\res.
 
-<Multi_key> <h> <w> : "Hello, world!"
 <Multi_key> <t> <f> : "(╯°□°)╯︵ ┻━┻"  # Table flip
 <Multi_key> <e> <f> : "ಠ_ಠ" # Eye face
 
