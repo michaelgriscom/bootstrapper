@@ -1,15 +1,15 @@
-packagename,params
-git,"""/GitOnlyOnPath"""
-everything,
-gitextensions,
-7zip,
-git-credential-manager-for-windows,
-gitkraken,
-sysinternals,
-googlechrome,
-spotify,
-notepadplusplus,
-microsoft-teams,
-visualstudiocode-insiders --pre,"""/NoDesktopIcon /NoQuicklaunchIcon"""
-explorerConfig.ps1,
-wincompose,
+packagename,flags,params,
+git,,"""/GitOnlyOnPath"""
+everything,,
+gitextensions,,
+7zip,,
+git-credential-manager-for-windows,,
+gitkraken,,
+sysinternals,,
+googlechrome,,
+spotify,"""--ignorechecksum""",
+notepadplusplus,,
+microsoft-teams,,
+visualstudiocode-insiders,"--pre","""/NoDesktopIcon /NoQuicklaunchIcon"""
+explorerConfig.ps1,,
+wincompose,,
