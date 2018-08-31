@@ -1,2 +1,2 @@
 ﻿echo "Copying WinCompose settings"
-Copy-Item -Path "$PSScriptRoot\..\resources\.XCompose" -Destination "$env:USERPROFILE"
+Copy-Item -Path "$PSScriptRoot\..\resources\wincompose\.XCompose" -Destination "$env:USERPROFILE"
