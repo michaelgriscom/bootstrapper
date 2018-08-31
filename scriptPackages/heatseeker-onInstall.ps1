@@ -9,15 +9,4 @@
     }
 }
 
-if (!(Get-Command "Install-Package")) {
-    echo "Install-Package not found. Installing package management."
-    choco upgrade -y powershell-packagemanagement
-    refreshenv
-}
-
-if (!(Get-Command "PSReadline" -ErrorAction SilentlyContinue)) {
-    echo "PSReadline not found. Trying to install it."
-    Install-Package PSReadline
-}
-
 AddPsProfile
