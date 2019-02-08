@@ -1,4 +1,4 @@
-packagename,flags,params,
+packagename,flags,params
 git,,"""/GitOnlyOnPath"""
 everything,,
 gitextensions,,
@@ -10,6 +10,7 @@ googlechrome,,
 spotify,"""--ignorechecksum""",
 notepadplusplus,,
 microsoft-teams,,
-visualstudiocode-insiders,"--pre","""/NoDesktopIcon /NoQuicklaunchIcon"""
+visualstudiocode-insiders,"""--pre""","""/NoDesktopIcon /NoQuicklaunchIcon"""
 explorerConfig.ps1,,
 wincompose,,
+keypirinha,,
