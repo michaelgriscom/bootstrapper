@@ -24,12 +24,9 @@ if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue)) {
 }
 
 $repoPath = "c:\git"
+$bootstrapperPath = "$repoPath/bootstrapper"
 
-if (!(test-path $repoPath)) {
-    New-Item $repoPath -ItemType Directory
-}
-
-if (!(test-path $repoPath/bootstrapper)) {
+if (!(test-path bootstrapperPath)) {
     pushd $repoPath
     git clone https://github.com/michaelgriscom/bootstrapper.git .
     popd
@@ -38,7 +35,7 @@ if (!(test-path $repoPath/bootstrapper)) {
 # exclude folder from defender scans
 Add-MpPreference -ExclusionPath $repoPath
 
-Invoke-Expression $repoPath/bootstrapper/setup-packages.ps1
-Invoke-Expression $repoPath/bootstrapper/configure-explorer.ps1
-Invoke-Expression $repoPath/bootstrapper/remove-default-apps.ps1
-Invoke-Expression $repoPath/bootstrapper/enable-wsl.ps1
+Invoke-Expression $bootstrapperPath/setup-packages.ps1
+Invoke-Expression $bootstrapperPath/configure-explorer.ps1
+Invoke-Expression $bootstrapperPath/remove-default-apps.ps1
+Invoke-Expression $bootstrapperPath/enable-wsl.ps1
