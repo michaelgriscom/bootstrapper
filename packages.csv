@@ -1,16 +1,15 @@
 packagename,flags,params
-git,,"""/GitOnlyOnPath"""
-everything,,
-gitextensions,,
 7zip,,
+choco-upgrade-all-at,,"""/WEEKLY:yes /DAY:SUN /TIME:02:00 /ABORTTIME:04:00"""
+everything,,
 git-credential-manager-for-windows,,
-gitkraken,,
-sysinternals,,
+git,"""-y""","""/GitAndUnixToolsOnPath"""
+gitextensions,,
 googlechrome,,
-spotify,"""--ignorechecksum""",
-notepadplusplus,,
-microsoft-teams,,
-visualstudiocode-insiders,"""--pre""","""/NoDesktopIcon /NoQuicklaunchIcon"""
-explorerConfig.ps1,,
-wincompose,,
 keypirinha,,
+microsoft-teams,,
+procexp,,
+screentogif,,
+sourcetree,,
+spotify,"""--ignorechecksum""",
+vscode,"""--pre""","""/NoDesktopIcon /NoQuicklaunchIcon"""

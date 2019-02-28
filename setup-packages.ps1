@@ -1,9 +1,5 @@
 ﻿#Requires -RunAsAdministrator
 
-#param (
-#[switch] $clean
-#)
-
 $PACKAGES_PATH = "$PSScriptRoot\packages.csv"
 
 function Load-Packages() {
@@ -12,21 +8,21 @@ function Load-Packages() {
             select packagename, params, flags
     }
     else {
-        echo "Package csv doesn't exist, this is a fatal error!"
+        Write-Error "Package csv doesn't exist, this is a fatal error!"
         Exit 1
     }
 }
 
 function Install-Choco-Package($package) {
     echo $package.flags
-    choco upgrade -y $package.packagename -params $package.params --allowEmptyChecksums --limit-output $package.flags
+    choco install -y $package.packagename -params $package.params --allowEmptyChecksums --limit-output $package.flags
     Run-Script-Package $package "-onInstall"
 }
 
 function Run-Script-Package($package, $suffix = "") {
     $scriptPath = "$PSScriptRoot\scriptPackages\$($package.packagename)$suffix.ps1"
     if (Test-Path $scriptPath) {
-        echo "Running: $scriptPath"
+        Write-Host "Running: $scriptPath"
         . $scriptPath
     }
 }
@@ -41,19 +37,10 @@ popd
 
 if ($gitExitCode -ne 0) {
     Save-State
-    echo "Git encountered an error, please resolve before updating again."
+    Write-Error "Git encountered an error, please resolve before updating again."
     Exit 1
 }
 
 ForEach ($package in $script:packages) {
-    echo "Installing/updating package: $($package.packagename)"
-    if ($package.packagename -match '\.ps1') {
-        echo "Executing: $($package.packagename)"
-        # replace packagename
-        $package.packagename = ($package.packagename -replace '\.ps1', '')
-        Run-Script-Package $package
-    }
-    else {
-        Install-Choco-Package $package
-    }
+    Install-Choco-Package $package
 }
