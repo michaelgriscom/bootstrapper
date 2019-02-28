@@ -1,12 +1,19 @@
 #Requires -RunAsAdministrator
 
 if (!(Get-Command "choco.exe" -ErrorAction SilentlyContinue)) {
-    echo "Installing Chocolatey"
+    Write-Host "Installing Chocolatey"
     iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+
+    # Make `refreshenv` available right away, by defining the $env:ChocolateyInstall variable
+    # and importing the Chocolatey profile module.
+    $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).path)\..\.."
+    Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+
     refreshenv
 }
 
 if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue)) {
+    Write-Host "Installing git"
     choco install -y git -params '"/GitAndUnixToolsOnPath"'
     refreshenv
 
@@ -20,7 +27,9 @@ $repoPath = "c:\git"
 
 if (!(test-path $repoPath)) {
     New-Item $repoPath -ItemType Directory
+}
 
+if (!(test-path $repoPath/bootstrapper)) {
     pushd $repoPath
     git clone https://github.com/michaelgriscom/bootstrapper.git .
     popd
