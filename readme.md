@@ -1,7 +1,7 @@
 Machine setup script
 =========================================
 
-Powershell script to set up a machine, along with a spacemacs configuration
+Powershell script to set up a machine
 
 Setup (windows)
 ======
