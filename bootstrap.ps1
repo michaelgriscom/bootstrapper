@@ -26,8 +26,10 @@ if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue)) {
 $repoPath = "c:\git"
 $bootstrapperPath = "$repoPath/bootstrapper"
 
-if (!(test-path bootstrapperPath)) {
-    pushd $repoPath
+if (!(test-path $bootstrapperPath)) {
+    New-Item $bootstrapperPath -ItemType Directory
+
+    pushd $bootstrapperPath
     git clone https://github.com/michaelgriscom/bootstrapper.git .
     popd
 }
