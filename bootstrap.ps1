@@ -6,6 +6,16 @@ if (!(Get-Command "choco.exe" -ErrorAction SilentlyContinue)) {
     refreshenv
 }
 
+if (!(Get-Command "git.exe" -ErrorAction SilentlyContinue)) {
+    choco install -y git -params '"/GitAndUnixToolsOnPath"'
+    refreshenv
+
+    # git perf tweaks
+    git config --global core.preloadindex true
+    git config --global core.fscache true
+    git config --global gc.auto 256
+}
+
 $repoPath = "c:\git"
 
 if (!(test-path $repoPath)) {

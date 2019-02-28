@@ -3,7 +3,6 @@ packagename,flags,params
 choco-upgrade-all-at,,"""/WEEKLY:yes /DAY:SUN /TIME:02:00 /ABORTTIME:04:00"""
 everything,,
 git-credential-manager-for-windows,,
-git,"""-y""","""/GitAndUnixToolsOnPath"""
 gitextensions,,
 googlechrome,,
 keypirinha,,
