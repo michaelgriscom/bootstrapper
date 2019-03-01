@@ -5,7 +5,7 @@ Powershell script to set up a machine
 
 Setup (windows)
 ======
-paste this into an admin powershell
+paste this into powershell
 
 ```
 set-executionpolicy unrestricted Process -Force
