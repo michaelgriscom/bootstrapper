@@ -20,7 +20,7 @@ function Install-Choco-Package($package) {
 }
 
 function Run-Script-Package($package) {
-    $scriptPath = "$PSScriptRoot\postInstallScripts\$($package.packagename).ps1"
+    $scriptPath = "$PSScriptRoot\post-install-scripts\$($package.packagename).ps1"
     if (Test-Path $scriptPath) {
         Write-Host "Running: $scriptPath"
         . $scriptPath
