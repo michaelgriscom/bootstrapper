@@ -1,14 +1,14 @@
 path,name,value,description
-"""HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server""","""fDenyTSConnections""",0,Enable remote desktop
-"""HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp""","""UserAuthentication""",0,Disable NLA
-"""HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer""","""DisableEdgeDesktopShortcutCreation""",1,Remove Edge shortcut
-"""HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager""","""EnthusiastMode""",1,Show file operations details
-"""HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced""","""HideFileExt""",0,Show file extensions
-"""HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced""","""Hidden""",1,Show hidden files
-"""HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced""","""LaunchTo""",1,Change default explorer view to This PC
-"""HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced""","""DisallowShaking""",1,Disable shaking
-"""HKCU:\Console""","""QuickEdit""",0,Disable Quick Edit in console
-"""HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer""","""DisableThumbnailsOnNetworkFolders""",1,Avoid creating Thumbs.db files on network volumes
-"""HKCU:\Software\Microsoft\Windows\CurrentVersion\Search""","""SearchboxTaskbar""",0,Hide search box in task bar
-"""HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced""","""StoreAppsOnTaskbar",0,Don't show Windows Store Apps on taskbar
-"""HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People""","""PeopleBand""",0,Hide people button
+"HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server","fDenyTSConnections",0,Enable remote desktop
+"HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp","UserAuthentication",0,Disable NLA
+"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer","DisableEdgeDesktopShortcutCreation",1,Remove Edge shortcut
+"HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager","EnthusiastMode",1,Show file operations details
+"HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced","HideFileExt",0,Show file extensions
+"HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced","Hidden",1,Show hidden files
+"HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced","LaunchTo",1,Change default explorer view to This PC
+"HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced","DisallowShaking",1,Disable shaking
+"HKCU:\Console","QuickEdit",0,Disable Quick Edit in console
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer","DisableThumbnailsOnNetworkFolders",1,Avoid creating Thumbs.db files on network volumes
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\Search","SearchboxTaskbar",0,Hide search box in task bar
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced","StoreAppsOnTaskbar",0,Don't show Windows Store Apps on taskbar
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People","PeopleBand",0,Hide people button
