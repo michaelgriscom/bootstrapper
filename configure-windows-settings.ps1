@@ -55,3 +55,6 @@ Enable-WSL
 
 # exclude git folder from defender scans
 Add-MpPreference -ExclusionPath "c:\git"
+
+# Remove Edge shortcut from desktop
+Remove-Item "C:\Users\*\Desktop\Microsoft Edge.lnk"

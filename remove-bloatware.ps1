@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 $applicationList = @(
     # default Windows 10 apps
     "Microsoft.3DBuilder"
@@ -105,6 +107,10 @@ $applicationList = @(
 
 foreach ($app in $applicationList) {
     Write-Host "Trying to remove $app"
-    Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
-    Get-AppXProvisionedPackage -Online | Where-Object DisplayName -like $app | Remove-AppxProvisionedPackage -Online
+    Get-AppxPackage -Name $app -AllUsers
+        | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+
+    Get-AppXProvisionedPackage -Online
+        | Where-Object DisplayName -like $app
+        | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
 }

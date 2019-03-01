@@ -1,4 +1,4 @@
-echo "Copying VSCode settings"
+Write-Host "Copying VSCode settings"
 $vscodeSettingsPath = "$env:APPDATA\Code\User"
 
 if (!(test-path $vscodeSettingsPath)) {
