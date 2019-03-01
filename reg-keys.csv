@@ -12,3 +12,17 @@ path,name,value,description
 "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search","SearchboxTaskbar",0,Hide search box in task bar
 "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced","StoreAppsOnTaskbar",0,Don't show Windows Store Apps on taskbar
 "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People","PeopleBand",0,Hide people button
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","FeatureManagementEnabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","OemPreInstalledAppsEnabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","PreInstalledAppsEnabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","SilentInstalledAppsEnabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","ContentDeliveryAllowed",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","PreInstalledAppsEverEnabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","SubscribedContentEnabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","SubscribedContent-338388Enabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","SubscribedContent-338389Enabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","SubscribedContent-314559Enabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","SubscribedContent-338387Enabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","SubscribedContent-338393Enabled",0,Prevent default apps from reinstalling
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager","SystemPaneSuggestionsEnabled",0,Prevent default apps from reinstalling
+"HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore","AutoDownload",2,Prevent default apps from reinstalling
