@@ -18,13 +18,13 @@ Function ShowTaskManagerDetails {
     }
 
     $preferences.Preferences[28] = 0
-    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -Type Binary -Value $preferences.Preferences
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -Value $preferences.Preferences
 }
 
 Function Enable-WSL {
     Write-Host "Installing Linux Subsystem..."
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Type DWord -Value 1
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowAllTrustedApps" -Type DWord -Value 1
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Value 1
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowAllTrustedApps" -Value 1
     Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -NoRestart -WarningAction SilentlyContinue | Out-Null
 }
 
@@ -41,8 +41,8 @@ function Load-Keys() {
 }
 
 function Set-Reg-Key($key) {
-    echo $key.description
-    Set-ItemProperty -Path $key.path -Name $key.name -Type $key.type -Value $key.value
+    Write-Host $key.description
+    Set-ItemProperty -Path $key.path -Name $key.name -Value $key.value
 }
 
 Load-Keys

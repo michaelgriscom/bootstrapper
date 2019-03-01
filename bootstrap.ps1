@@ -50,6 +50,11 @@ if (!(test-path $bootstrapperPath)) {
     popd
 }
 
+Write-Host "Installing applications" -ForegroundColor "Yellow"
 Invoke-Expression $bootstrapperPath/install-apps.ps1
+
+Write-Host "Removing bloatware" -ForegroundColor "Yellow"
 Invoke-Expression $bootstrapperPath/remove-bloatware.ps1
+
+Write-Host "Configuring Windows" -ForegroundColor "Yellow"
 Invoke-Expression $bootstrapperPath/configure-windows-settings.ps1

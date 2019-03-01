@@ -14,7 +14,6 @@ function Load-Packages() {
 }
 
 function Install-Choco-Package($package) {
-    echo $package.flags
     choco install -y $package.packagename -params $package.params --allowEmptyChecksums --limit-output $package.flags
     Run-Script-Package $package
 }
