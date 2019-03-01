@@ -29,10 +29,10 @@ function Run-Script-Package ($package) {
 Load-Packages
 
 # update setup files
-pushd $PSScriptRoot
+Push-Location $PSScriptRoot
 git pull
 $gitExitCode = $LASTEXITCODE
-popd
+Pop-Location
 
 if ($gitExitCode -ne 0) {
     Save-State

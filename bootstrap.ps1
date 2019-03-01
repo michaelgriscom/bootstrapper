@@ -18,7 +18,7 @@ if (!(Verify-Elevated)) {
 
 if (!(Get-Command "choco.exe" -ErrorAction SilentlyContinue)) {
     Write-Host "Installing Chocolatey"
-    iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+    Invoke-WebRequest https://chocolatey.org/install.ps1 -UseBasicParsing | Invoke-Expression
 
     # Make `refreshenv` available right away, by defining the $env:ChocolateyInstall variable
     # and importing the Chocolatey profile module.
@@ -45,9 +45,9 @@ $bootstrapperPath = "$repoPath/bootstrapper"
 if (!(Test-Path $bootstrapperPath)) {
     New-Item $bootstrapperPath -ItemType Directory
 
-    pushd $bootstrapperPath
+    Push-Location $bootstrapperPath
     git clone https://github.com/michaelgriscom/bootstrapper.git .
-    popd
+    Pop-Location
 }
 
 Write-Host "Installing applications" -ForegroundColor "Yellow"
