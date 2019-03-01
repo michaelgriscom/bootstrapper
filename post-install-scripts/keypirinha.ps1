@@ -7,3 +7,7 @@ if (!(test-path $keyPirinhaSettingsPath)) {
 }
 
 Copy-Item -Path "$PSScriptRoot\..\resources\keypirinha\Keypirinha.ini" -Destination $keyPirinhaSettingsPath
+
+refreshenv
+
+keypirinha
