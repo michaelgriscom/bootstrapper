@@ -1,7 +1,7 @@
 Write-Host "Copying VSCode settings"
 $vscodeSettingsPath = "$env:APPDATA\Code\User"
 
-if (!(test-path $vscodeSettingsPath)) {
+if (!(Test-Path $vscodeSettingsPath)) {
     New-Item $vscodeSettingsPath -ItemType Directory
 }
 

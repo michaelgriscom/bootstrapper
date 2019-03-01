@@ -1,16 +1,16 @@
 ﻿#Requires -RunAsAdministrator
 
 # Show Task Manager details
-Function ShowTaskManagerDetails {
+function ShowTaskManagerDetails {
     Write-Host "Showing task manager details..."
-    If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager")) {
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager")) {
         New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Force | Out-Null
     }
 
     $preferences = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -ErrorAction SilentlyContinue
-    If (!($preferences)) {
-        $taskmgr = Start-Process -WindowStyle Hidden -FilePath taskmgr.exe -PassThru
-        While (!($preferences)) {
+    if (!($preferences)) {
+        $taskmgr = Start-Process -WindowStyle Hidden -FilePath taskmgr.exe -Passthru
+        while (!($preferences)) {
             Start-Sleep -m 250
             $preferences = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -ErrorAction SilentlyContinue
         }
@@ -21,7 +21,7 @@ Function ShowTaskManagerDetails {
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -Value $preferences.Preferences
 }
 
-Function Enable-WSL {
+function Enable-WSL {
     Write-Host "Installing Linux Subsystem..."
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Value 1
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowAllTrustedApps" -Value 1
@@ -29,28 +29,28 @@ Function Enable-WSL {
 }
 
 $REG_KEYS_PATH = "$PSScriptRoot\reg-keys.csv"
-function Load-Keys() {
+function Load-Keys () {
     if (Test-Path $REG_KEYS_PATH) {
         $script:keys = Get-Content $REG_KEYS_PATH | ConvertFrom-Csv |
-            select path, name, type, value, description
+        Select-Object path,name,Get-Content,value,description
     }
     else {
         Write-Error "Reg key csv doesn't exist, this is a fatal error!"
-        Exit 1
+        exit 1
     }
 }
 
-function Set-Reg-Key($key) {
+function Set-Reg-Key ($key) {
     Write-Host $key.description
-    If (!(Test-Path $key.path)) {
+    if (!(Test-Path $key.path)) {
         New-Item -Path $key.path -Force | Out-Null
     }
 
-    Set-ItemProperty -Path $key.path -Name $key.name -Value $key.value
+    Set-ItemProperty -Path $key.path -Name $key.Name -Value $key.value
 }
 
 Load-Keys
-ForEach ($key in $script:keys) {
+foreach ($key in $script:keys) {
     Set-Reg-Key $key
 }
 

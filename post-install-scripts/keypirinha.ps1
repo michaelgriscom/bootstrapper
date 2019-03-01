@@ -2,7 +2,7 @@ Write-Host "Copying keyirinha settings"
 
 $keyPirinhaSettingsPath = "$env:APPDATA\Keypirinha\User"
 
-if (!(test-path $keyPirinhaSettingsPath)) {
+if (!(Test-Path $keyPirinhaSettingsPath)) {
     New-Item $keyPirinhaSettingsPath -ItemType Directory
 }
 
