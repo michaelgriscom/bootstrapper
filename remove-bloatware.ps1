@@ -11,7 +11,6 @@ $applicationList = @(
     "Microsoft.BingWeather"
     "Microsoft.FreshPaint"
     "Microsoft.Microsoft3DViewer"
-    "Microsoft.MicrosoftOfficeHub"
     "Microsoft.MicrosoftSolitaireCollection"
     "Microsoft.MicrosoftPowerBIForWindows"
     "Microsoft.MinecraftUWP"
@@ -56,7 +55,6 @@ $applicationList = @(
 
     # Redstone 5 apps
     "Microsoft.MixedReality.Portal"
-    "Microsoft.ScreenSketch"
     "Microsoft.YourPhone"
 
     # non-Microsoft
