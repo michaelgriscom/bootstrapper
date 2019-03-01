@@ -42,6 +42,10 @@ function Load-Keys() {
 
 function Set-Reg-Key($key) {
     Write-Host $key.description
+    If (!(Test-Path $key.path)) {
+        New-Item -Path $key.path -Force | Out-Null
+    }
+
     Set-ItemProperty -Path $key.path -Name $key.name -Value $key.value
 }
 

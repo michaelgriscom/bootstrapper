@@ -8,6 +8,8 @@ if (!(test-path $vscodeSettingsPath)) {
 Copy-Item -Path "$PSScriptRoot\..\resources\vscode\keybindings.json" -Destination $vscodeSettingsPath
 Copy-Item -Path "$PSScriptRoot\..\resources\vscode\settings.json" -Destination $vscodeSettingsPath
 
+refreshenv
+
 # Install extensions
 code --install-extension ban.spellright
 code --install-extension CoenraadS.bracket-pair-colorizer

@@ -107,10 +107,7 @@ $applicationList = @(
 
 foreach ($app in $applicationList) {
     Write-Host "Trying to remove $app"
-    Get-AppxPackage -Name $app -AllUsers
-        | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+    Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
 
-    Get-AppXProvisionedPackage -Online
-        | Where-Object DisplayName -like $app
-        | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+    Get-AppXProvisionedPackage -Online | Where-Object DisplayName -like $app | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
 }
