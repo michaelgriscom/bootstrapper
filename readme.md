@@ -3,9 +3,13 @@ Machine setup script
 
 Powershell script to set up a machine
 
-Setup (windows)
+- Installs and configures programs through chocolatey
+- Uninstalls bloatware
+- Configures system settings
+
+Instructions
 ======
-paste this into powershell
+Execute this in powershell:
 
 ```
 set-executionpolicy unrestricted Process -Force
