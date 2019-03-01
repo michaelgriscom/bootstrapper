@@ -16,11 +16,11 @@ function Load-Packages() {
 function Install-Choco-Package($package) {
     echo $package.flags
     choco install -y $package.packagename -params $package.params --allowEmptyChecksums --limit-output $package.flags
-    Run-Script-Package $package "-onInstall"
+    Run-Script-Package $package
 }
 
-function Run-Script-Package($package, $suffix = "") {
-    $scriptPath = "$PSScriptRoot\scriptPackages\$($package.packagename)$suffix.ps1"
+function Run-Script-Package($package) {
+    $scriptPath = "$PSScriptRoot\postInstallScripts\$($package.packagename).ps1"
     if (Test-Path $scriptPath) {
         Write-Host "Running: $scriptPath"
         . $scriptPath
