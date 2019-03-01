@@ -57,5 +57,4 @@ Add-MpPreference -ExclusionPath $repoPath
 
 Invoke-Expression $bootstrapperPath/install-apps.ps1
 Invoke-Expression $bootstrapperPath/remove-bloatware.ps1
-Invoke-Expression $bootstrapperPath/configure-explorer.ps1
-Invoke-Expression $bootstrapperPath/enable-wsl.ps1
+Invoke-Expression $bootstrapperPath/configure-windows-settings.ps1
