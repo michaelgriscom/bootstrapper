@@ -1,2 +1,2 @@
-echo "Copying VSCode settings"
-Copy-Item -Path "$PSScriptRoot\..\resources\keypirinha\Keypirinha.ini" -Destination "$env:APPDATA\\User"
+Write-Host "Copying keyirinha settings"
+Copy-Item -Path "$PSScriptRoot\..\resources\keypirinha\Keypirinha.ini" -Destination "$env:APPDATA\Keypirinha\User"
