@@ -55,7 +55,7 @@ if (!(test-path $bootstrapperPath)) {
 # exclude folder from defender scans
 Add-MpPreference -ExclusionPath $repoPath
 
-Invoke-Expression $bootstrapperPath/setup-packages.ps1
+Invoke-Expression $bootstrapperPath/install-apps.ps1
+Invoke-Expression $bootstrapperPath/remove-bloatware.ps1
 Invoke-Expression $bootstrapperPath/configure-explorer.ps1
-Invoke-Expression $bootstrapperPath/remove-default-apps.ps1
 Invoke-Expression $bootstrapperPath/enable-wsl.ps1
