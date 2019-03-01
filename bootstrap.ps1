@@ -16,8 +16,6 @@ if (!(Verify-Elevated)) {
    exit
 }
 
-exit
-
 if (!(Get-Command "choco.exe" -ErrorAction SilentlyContinue)) {
     Write-Host "Installing Chocolatey"
     iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
@@ -51,9 +49,6 @@ if (!(test-path $bootstrapperPath)) {
     git clone https://github.com/michaelgriscom/bootstrapper.git .
     popd
 }
-
-# exclude folder from defender scans
-Add-MpPreference -ExclusionPath $repoPath
 
 Invoke-Expression $bootstrapperPath/install-apps.ps1
 Invoke-Expression $bootstrapperPath/remove-bloatware.ps1
